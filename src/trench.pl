@@ -10,7 +10,7 @@ printGameState([H|T], I) :-
                       I1 is I + 1,
                       printGameState(T, I1).
                                    
-printGameState([], I).
+printGameState([], _).
 
 printLineSpaces(S) :-
                 S > 0,
