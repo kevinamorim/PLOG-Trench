@@ -78,9 +78,75 @@ Luís Magalhães - 201207224 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{O Jogo TRENCH}
 
-Descrever detalhadamente o jogo, a sua história e, principalmente, as suas regras.
-Devem ser incluidas imagens apropriadas para explicar o funcionamento do jogo.
-Devem ser incluidas as fontes de informação (e.g. URLs em rodapé).
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.3]{img/game-cover.jpg}
+\label{fig:0}
+\end{center}
+\end{figure}
+
+Trench é um jogo de tabuleiro criado em Portugal por Rui Alípio Monteiro, em 2013. Este é um jogo para 2 jogadores baseado na guerra de trincheiras da 1ª Guerra Mundial. 
+
+Os algoritmos aplicados no jogos seguem os princípios referidos no livro "The Art of the War", de Sun Tzu. A disposição das peças do jogo em losango é inspirada na formação em diamante, originária no exército romano.
+
+\subsection{Objetivo do Jogo}
+
+O objetivo do jogo é capturar todas as peças inimigas. No entanto, nem sempre é possível que tal aconteça (pelas limitações das peças e do tabuleiro), pelo que a vitória ou a derrota regem-se por um sistema de pontuação, explicado em baixo.
+
+\subsection{Início do Jogo}
+
+O jogador que possuir as peças de cor preta inicia o jogo. Cada jogador tem direito a uma jogada por turn. O jogo termina ao fim de 25 jogadas se nenhuma peça for capturada nesse intervalo.
+
+\newpage
+
+\subsection{Tabuleiro de Jogo}
+
+O tabuleiro representa o campo de batalha, com as respetivas trincheiras.
+O tabuleiro de jogo tem uma forma em diamante, dividido por uma linha diagonal, que representa a linha das trincheiras (Cada metade do tabuleiro tem uma cor predominante: preto para um jogador, branco para o outro).
+O tabuleiro é constítuido por 64 casas (8x8), divididas em dois territórios opostos.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.5]{img/board.jpg}
+\caption{Tabuleiro de jogo 8x8}
+\label{fig:1}
+\end{center}
+\end{figure}
+
+
+\subsection{Peças do Jogo}
+
+As peças do jogo são as apresentadas na seguinte tabela:
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.8]{img/pieces.jpg}
+\caption{Tabel das peças do jogo}
+\label{fig:2}
+\end{center}
+\end{figure}
+
+ \newpage
+
+Estas possuem uma forma em losango, inspirada nas estrelas usadas pelos soldados em batalha. Estas simbolizam a hierarquia militar em pirâmide.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.5]{img/piece.png}
+\caption{Peça do jogo Trench}
+\label{fig:3}
+\end{center}
+\end{figure}
+
+As peças seguem a seguinte hierarquia (estando no topo o de mais alto nível):
+
+\begin{enumerate}
+	\item General
+	\item Coronel
+	\item Capitão
+	\item Sargento
+	\item Soldado
+\end{enumerate}s
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%

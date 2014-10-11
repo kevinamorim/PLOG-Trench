@@ -1,4 +1,4 @@
-*.log
-*.synctex.gz
+template.log
+template.synctex.gz
 
-*.aux
+template.aux
