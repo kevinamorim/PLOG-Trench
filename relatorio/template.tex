@@ -146,7 +146,82 @@ As peças seguem a seguinte hierarquia (estando no topo o de mais alto nível):
 	\item Capitão
 	\item Sargento
 	\item Soldado
-\end{enumerate}s
+\end{enumerate}
+
+\subsubsection{Disposição das Peças}
+As peças são dispostas no tabuleiro de forma a simular a formação de um exército Romano, em diamante, como se poder ver na Fig. 5. O general, a peça com maior ranking na hierarquia, fica no topo da metade aliada do tabuleiro, atrás de todo o exército. Na linha da frente ficam os  6 soldados, menor ranking na hierarquia. 
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.5]{img/pieces-disposition.jpg}
+\caption{Disposição das peças do jogo}
+\label{fig:4}
+\end{center}
+\end{figure}
+
+\newpage
+
+\subsubsection{Movimento das Peças}
+
+\begin{itemize}
+	\item \textbf{Soldado}: 1 casa (na diagonal em qualquer direção);
+	\item \textbf{Sargento}: 2 casas (na diagonal em qualquer direção e para a frente);
+	\item \textbf{Capitão}: 3 casas (na diagonal em qualquer direção e tanto para a frente como para trás);'
+	\item \textbf{Coronel}: 4 casas (na diagonal em qualquer direção, para frente, esquerda e direita - mas não para trás);
+	\item \textbf{General}: 5 casas (em todas as direções);
+\end{itemize}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.5]{img/pieces-movement.jpg}
+\caption{Representação do movimento das peças do jogo}
+\label{fig:5}
+\end{center}
+\end{figure}
+
+\subsubsection{Condições do Movimento das Peças}
+
+\begin{itemize}
+	\item O jogador é sempre obrigado a movimentar uma peça, na sua vez.
+	\item Nenhuma das peças de jogo pode avançar sobre outra peça (seja do seu ou do exército adversário);
+	\item Para capturar uma peça inimiga, a peça do jogador passa a ocupar a parcela quadrada da peça do adversário (terminando o seu movimento imediatamente).
+	\item Nenhuma peça é obrigada a percorrer a totalidade das casas que pode percorrer. Isto é, por exemplo, o General pode se mover apenas 1 casa ou 5 casas, conforme o jogador quiser.
+\end{itemize}
+
+\newpage
+
+\subsection{A Trincheira}
+
+A trincheira é representada pela linha horizontal no centro do tabuleiro, como referido anteriormente. As peças nesta linha usufruem de um conjunto de vantagens e desvantagens: 
+
+
+\begin{itemize}
+	\item \textbf{1ª Vantagem:} Uma peça na trincheira não pode ser atacada por uma peça adversária. 
+	\item \textbf{2ª Vantagem:}Uma peça na trincheira não é obrigada a parar quando ataca uma peça adversária. Portanto, essas podem continuar o seu movimento ou até atacar outras peças, até concluir a sua totalidade de casas a movimentar, ou o jogador decidir parar.
+
+	\item \textbf{1ª Restrição:} Uma peça em trincheira não pode capturar peças adversárias que se encontrem no território aliado (retaguarda). Mas podem ser atacadas por peças adversárias que se encontrem no território aliado. 
+	\item \textbf{2ª Restrição:} O Coronel e o General podem se movimentar ao longo de toda a linha da trincheira, mas não podem capturar nenhuma peça adversária que aí se encontre, ficando com os seus movimentos limitados.
+\end{itemize}
+
+\newpage
+
+\subsection{Fim do Jogo}
+
+O jogo termina ao fim de duas partidas. Depois de cada partida os jogadores trocam de lado, para que cada um jogue uma vez com as brancas e outra com as pretas. 
+	Uma partida termina quando algum jogador capturar todas as peças adversárias. No entanto, se após 50 jogadas ninguém capturar todas as peças adversárias o jogo termina e procede-se a contagem de pontos, segundo a seguinte tabela:
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.7]{img/points.jpg}
+\caption{Valor de cada peça do jogo}
+\label{fig:6}
+\end{center}
+\end{figure}
+
+No final das duas partidas somam-se os pontos feitos por cada jogador em cada partida e ganha o jogo o jogador com mais pontos. Em caso de empate joga-se outra partida e ganha o jogo o jogador que conseguir capturar 40 pontos primeiro. 
+
+\newpage
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
