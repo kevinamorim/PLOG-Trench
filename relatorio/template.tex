@@ -7,7 +7,7 @@
 \usepackage{indentfirst}
 \usepackage{graphicx}
 \usepackage{verbatim}
-
+\usepackage{listings}
 
 \begin{document}
 
@@ -245,18 +245,157 @@ A cada peças destas, excepto as vazias, será acrescentado um sufixo com o núm
 
 Para distinguir a metade do tabuleiro branca da preta, assumimos sempre que as listas de 0 a 6 pertencem ao branco e as listas de 8 a 14 pertecem ao preto. A lista 7 (oitava lista) é a linha da trincheira, como já referido anteriormente. 
 
+Em Prolog a representação será a seguinte:
+
+\vspace{1cm}
+
+\textbf{Estado inicial}
+
+gameList( [ [g1], 
+		[co1, co1], 
+		[ca1, ca1, ca1],
+		[sa1, sa1, sa1, sa1], 
+          		[e, so1, so1, so1, e], 
+		[e, e, so1, so1, e, e], 
+		[e, e, e, so1, e, e, e],
+         		[e, e, e, so2, e, e, e],
+		[e, e, so2, so2, e, e], 
+		[e, so2, so2, so2, e], 
+		[sa2, sa2, sa2, sa2],
+         		[ca2, ca2, ca2], 
+		[co2, co2],
+ 		[g2]  ]).
+
+\vspace{1cm}
+
+\textbf{Estado final com todas as peças conquistadas (exemplo)}
+
+gameList( [ [e], 
+		[co1, co1], 
+		[ca1, ca1, e],
+		[sa1, e, sa1, sa1], 
+          		[e, so1, e, so1, e], 
+		[e, e, so1, so1, e, e], 
+		[e, ca1, e, e, e, e, e],
+         		[e, e, e, e, g1, e, e],
+		[e, e, sa1, e, e, e], 
+		[e, e, e, e, e], 
+		[e, e, e, so1],
+         		[e, e, e], 
+		[e, e],
+ 		[e]  ]).
+
+\vspace{1cm}
+
+\textbf{Estado intermédio (exemplo)}
+
+gameList( [ [e], 
+		[co1, co1], 
+		[ca1, ca1, e],
+		[sa1, e, sa1, sa1], 
+          		[e, so1, e, so1, e], 
+		[e, e, so1, so1, e, e], 
+		[e, ca1, e, e, e, e, e],
+         		[e, so2, e, e, g1, e, e],
+		[e, e, sa1, e, e, e], 
+		[ca2, e, e, e, e], 
+		[e, e, e, so1],
+         		[e, g2, e], 
+		[e, e],
+ 		[e]  ]).
+
+
+\newpage
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Visualização do Tabuleiro}
 
-Descrever a forma de visualização do tabuleiro em modo de texto e o(s) predicado(s) Prolog construídos para o efeito.
-Deve ser incluída pelo menos uma imagem correspondente ao output produzido pelo predicado de visualização.
+A representação do jogo na consola, em Prolog, está implementada da seguinte forma: (Versão ainda temporária)
 
+\begin{lstlisting}
+printGameState([], _).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
+// Parameters: List to print, Starting line
+printGameState([H|T], I) :-
+                      S is abs(7 - I),
+                      printLineSpaces(S);
+                      printGameLine(H),
+                      nl,
+                      I1 is I + 1,
+                      printGameState(T, I1).
+                                   
+// Prints empty lines
+// Parameters: S: number of line to print.
+// Restrictions: S should be bigger than 0 (zero).
+printLineSpaces(S) :-
+                S > 0,
+                write(' '),
+                S1 is S - 1,
+                printLineSpaces(S1).
+
+// Prints the actual game line
+printGameLine([]).
+
+// Parameters: Game line to print (list)
+printGameLine([H|T]) :-
+                     getSymbol(H, S),
+                     write(S),
+                     write(' '),
+                     printGameLine(T).
+
+\end{lstlisting}
+
+A função de getSymbol() retorna o simbolo correspondente a cada átomo.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.7]{img/output.jpg}
+\caption{Output para a consola em Prolog}
+\label{fig:7}
+\end{center}
+\end{figure}
+
+\newpage
+
 \section{Movimentos}
 
-Elencar os movimentos (tipos de jogadas) possíveis e definir os cabeçalhos dos predicados que serão utilizados (ainda não precisam de estar implementados).
+Versão temporária e ainda não implementada dos predicados que poderão ser aplicados na mecânica do jogo:
+
+\begin{lstlisting}
+
+// ======================================
+// Predicates, not implemented yet
+// ======================================
+
+// Checks if players piece can move to a given direction
+canMove(s1, northeast).
+canMove(s1, northwest).
+canMove(s1, southeast).
+canMove(s1, southwest).
+
+// etc for all the other pieces...
+//
+// Updates the list according a Y movement of a X piece.
+// update(X, Y).
+
+// Moves the piece X to the direction Y... Checks if the movement is possible 
+// if it's possible, updates the list
+// move(X, Y) :- canMove(X, Y), update(X, Y).
+
+// Other predictates:
+
+// canAttack(X, Y). -> Checks if the piece X can attack the piece Y
+
+// attack(X, Y) :- canAttack(X, Y), updateAttk(X, Y).
+
+// win(X) - checks if player X has won the game
+
+// ====================================== 
+
+\end{lstlisting}
 
 
 \end{document}
