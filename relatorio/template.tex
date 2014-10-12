@@ -23,7 +23,7 @@
 \Large{Programação em Lógica}\linebreak
 }
 
-\author{\textbf{Grupo xx:}\\
+\author{\textbf{Grupo Trench_1:}\\
 Kevin Amorim - 201207231 \\
 Luís Magalhães - 201207224 \\
 \linebreak\linebreak \\
@@ -87,7 +87,7 @@ Luís Magalhães - 201207224 \\
 
 Trench é um jogo de tabuleiro criado em Portugal por Rui Alípio Monteiro, em 2013. Este é um jogo para 2 jogadores baseado na guerra de trincheiras da 1ª Guerra Mundial. 
 
-Os algoritmos aplicados no jogos seguem os princípios referidos no livro "The Art of the War", de Sun Tzu. A disposição das peças do jogo em losango é inspirada na formação em diamante, originária no exército romano.
+Os algoritmos aplicados no jogos seguem os princípios referidos no livro "The Art of the War", de Sun Tzu. 
 
 \subsection{Objetivo do Jogo}
 
@@ -95,14 +95,14 @@ O objetivo do jogo é capturar todas as peças inimigas. No entanto, nem sempre 
 
 \subsection{Início do Jogo}
 
-O jogador que possuir as peças de cor preta inicia o jogo. Cada jogador tem direito a uma jogada por turn. O jogo termina ao fim de 25 jogadas se nenhuma peça for capturada nesse intervalo.
+O jogador que possuir as peças de cor preta inicia o jogo. Cada jogador tem direito a uma jogada por vez. O jogo termina ao fim de 25 jogadas se nenhuma peça for capturada nesse intervalo.
 
 \newpage
 
 \subsection{Tabuleiro de Jogo}
 
 O tabuleiro representa o campo de batalha, com as respetivas trincheiras.
-O tabuleiro de jogo tem uma forma em diamante, dividido por uma linha diagonal, que representa a linha das trincheiras (Cada metade do tabuleiro tem uma cor predominante: preto para um jogador, branco para o outro).
+Este tem uma forma em diamante, dividido por uma linha diagonal, que representa a linha das trincheiras (Cada metade do tabuleiro tem uma cor predominante: preto para um jogador, branco para o outro).
 O tabuleiro é constítuido por 64 casas (8x8), divididas em dois territórios opostos.
 
 \begin{figure}[h!]
@@ -128,7 +128,7 @@ As peças do jogo são as apresentadas na seguinte tabela:
 
  \newpage
 
-Estas possuem uma forma em losango, inspirada nas estrelas usadas pelos soldados em batalha. Estas simbolizam a hierarquia militar em pirâmide.
+Estas possuem uma forma em losango, inspirada nas estrelas usadas pelos soldados em batalha e simbolizam a hierarquia militar em pirâmide.
 
 \begin{figure}[h!]
 \begin{center}
@@ -185,7 +185,7 @@ As peças são dispostas no tabuleiro de forma a simular a formação de um exé
 	\item O jogador é sempre obrigado a movimentar uma peça, na sua vez.
 	\item Nenhuma das peças de jogo pode avançar sobre outra peça (seja do seu ou do exército adversário);
 	\item Para capturar uma peça inimiga, a peça do jogador passa a ocupar a parcela quadrada da peça do adversário (terminando o seu movimento imediatamente).
-	\item Nenhuma peça é obrigada a percorrer a totalidade das casas que pode percorrer. Isto é, por exemplo, o General pode se mover apenas 1 casa ou 5 casas, conforme o jogador quiser.
+	\item Nenhuma peça é obrigada a percorrer a totalidade das casas que pode percorrer. Isto é, por exemplo, o General pode-se mover apenas 1 casa ou 5 casas, conforme o jogador quiser.
 \end{itemize}
 
 \newpage
@@ -197,10 +197,10 @@ A trincheira é representada pela linha horizontal no centro do tabuleiro, como 
 
 \begin{itemize}
 	\item \textbf{1ª Vantagem:} Uma peça na trincheira não pode ser atacada por uma peça adversária. 
-	\item \textbf{2ª Vantagem:}Uma peça na trincheira não é obrigada a parar quando ataca uma peça adversária. Portanto, essas podem continuar o seu movimento ou até atacar outras peças, até concluir a sua totalidade de casas a movimentar, ou o jogador decidir parar.
+	\item \textbf{2ª Vantagem:} Uma peça na trincheira não é obrigada a parar quando ataca uma peça adversária. Portanto, essas podem continuar o seu movimento ou até atacar outras peças, até concluir a sua totalidade de casas a movimentar, ou o jogador decidir parar.
 
-	\item \textbf{1ª Restrição:} Uma peça em trincheira não pode capturar peças adversárias que se encontrem no território aliado (retaguarda). Mas podem ser atacadas por peças adversárias que se encontrem no território aliado. 
-	\item \textbf{2ª Restrição:} O Coronel e o General podem se movimentar ao longo de toda a linha da trincheira, mas não podem capturar nenhuma peça adversária que aí se encontre, ficando com os seus movimentos limitados.
+	\item \textbf{1ª Restrição:} Uma peça em trincheira não pode capturar peças adversárias que se encontrem no território aliado (retaguarda). Mas podem ser atacadas por peças adversárias que se encontrem no território aliado, sendo, aliás, a única forma para capturar peças inimigas na trincheira.
+	\item \textbf{2ª Restrição:} O Coronel e o General podem-se movimentar ao longo de toda a linha da trincheira, mas não podem capturar nenhuma peça adversária que aí se encontre, ficando com os seus movimentos limitados.
 \end{itemize}
 
 \newpage
