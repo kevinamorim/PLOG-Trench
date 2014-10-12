@@ -227,7 +227,23 @@ No final das duas partidas somam-se os pontos feitos por cada jogador em cada pa
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Representação do Estado do Jogo}
 
-Descrever a forma de representação do estado do tabuleiro (tipicamente uma lista de listas), com exemplificação em Prolog de posições iniciais do jogo, posições intermédias e finais, acompanhadas de imagens ilustrativas.
+A representação do estado do jogo irá ser feita através de uma lista de listas. 
+A matriz (lista de listas) irá ser composta por uma lista contendo 15 listas de diferentes tamanhos. As listas mais internas serão de diferentes tamanhos para se poder representar a forma em diamante do tabuleiro. Portanto, a primeira e a última lista seriam compostas por apenas 1 elemento, enquanto que a oitava lista, a do meio, correspondente à trincheira, seria composta por 8 elementos. 
+
+Cada peça do jogo será representado pelo seguinte átomo: 
+
+\begin{itemize}
+	\item{\textbf{Soldado:} So}
+	\item {\textbf{Sargento:} Sa}
+	\item{\textbf{Capitão:} Ca}
+	\item{\textbf{Coronel:} Co}
+	\item{\textbf{General:} G}
+	\item{\textbf{Espaço Vazio:} E}
+\end{itemize}
+
+A cada peças destas, excepto as vazias, será acrescentado um sufixo com o número do jogador. Por exemplo, para o jogador 1, um soldado será representado por: So1.
+
+Para distinguir a metade do tabuleiro branca da preta, assumimos sempre que as listas de 0 a 6 pertencem ao branco e as listas de 8 a 14 pertecem ao preto. A lista 7 (oitava lista) é a linha da trincheira, como já referido anteriormente. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
