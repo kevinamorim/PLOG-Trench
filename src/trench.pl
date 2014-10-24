@@ -1,18 +1,27 @@
-% Trench Game - PLOG exercise
+% Trench Game - PLOG exercise 
 gameList([[g], [co, co], [ca, ca, ca], [sa, sa, sa, sa], 
-          [e, so, so, so, e], [e, e, so, so, e, e], [e, e, e, so, e, e, e],
+          [e, so, so, so, e], [e, e, so, so, e, e], [e, e, e, so, e, e, e], [e, e, e, e, e, e, e, e],
          [e, e, e, so, e, e, e], [e, e, so, so, e, e], [e, so, so, so, e], [sa, sa, sa, sa],
          [ca, ca, ca], [co, co], [g]]).
 
 % Print game state
 
+% Parameters: List to print, Starting line
+% TODO: Verify if I is bigger than the matrix rows.
 printGameState([], _).
 
+printGameState([H|T], 7) :-
+                      I2 is 7 * 2,
+                      S is abs(14 - I2),
+                      printLineSpaces(S);
+                      printTrenchLine(H),
+                      nl,
+                      I1 is 7 + 1,
+                      printGameState(T, I1).
 
-% Parameters: List to print, Starting line
-% TODO: Verify if I is bigger than the matrix rows. 
 printGameState([H|T], I) :-
-                      S is abs(7 - I),
+                      I2 is I * 2,
+                      S is abs(14 - I2),
                       printLineSpaces(S);
                       printGameLine(H),
                       nl,
@@ -33,20 +42,43 @@ printLineSpaces(S) :-
 printGameLine([]).
 
 % Parameters: Game line to print (list)
+printGameLine([H]) :-
+                     getSymbol(H, S),
+                     %use_module(library(clpfd)),
+                     %put_code(S),
+                     format('~c', S).
+
 printGameLine([H|T]) :-
                      getSymbol(H, S),
                      %use_module(library(clpfd)),
                      %put_code(S),
-                     write(S),
-                     write(' '),
+                     format('~c', S),
+                     write('   '),
                      printGameLine(T).
+
+printTrenchLine([]).
+
+printTrenchLine([H]) :-
+                     getSymbol(H, S),
+                     %use_module(library(clpfd)),
+                     %put_code(S),
+                     format('~c', S).
+
+printTrenchLine([H|T]) :-
+                     getSymbol(H, S),
+                     %put_code(S),
+                     format('~c', S),
+                     write(' '),
+                     format('~c', [215]),
+                     write(' '),
+                     printTrenchLine(T).
              
 
 % Game symbols, can be changed to whatever we want 
 % Returns: Char code, so we can use all the ascii chars (even extended)
-getSymbol(g, 'G').
-getSymbol(co, 'C').
-getSymbol(ca, 'C').
-getSymbol(sa, 'S').
-getSymbol(so, 'S').
-getSymbol(e, '_').
+getSymbol(g, 52).
+getSymbol(co, 51).
+getSymbol(ca, 50).
+getSymbol(sa, 49).
+getSymbol(so, 48).
+getSymbol(e, 45).
