@@ -1,8 +1,17 @@
+% g - general
+% co - coronel
+% ca - capitan
+% sa - sargeant 
+% so - soldier
+
+% Print Game List: ?gameList(X), printGameState(X, 0).
+printTest(_) :- gameList(X), printGameState(X). % Temporary ;)
+
 % Trench Game - PLOG exercise 
-gameList([[g], [co, co], [ca, ca, ca], [sa, sa, sa, sa], 
-          [e, so, so, so, e], [e, e, so, so, e, e], [e, e, e, so, e, e, e], [e, e, e, e, e, e, e, e],
-         [e, e, e, so, e, e, e], [e, e, so, so, e, e], [e, so, so, so, e], [sa, sa, sa, sa],
-         [ca, ca, ca], [co, co], [g]]).
+gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
+          [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
+         [e, e, e, so2, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
+         [ca2, ca2, ca2], [co2, co2], [g2]]).
 
 % Print game state
 
@@ -27,6 +36,8 @@ printGameState([H|T], I) :-
                       nl,
                       I1 is I + 1,
                       printGameState(T, I1).
+
+printGameState([H|T]) :- printHeader(_), nl, printGameState([H|T], 0).
                                    
 
 % Prints empty lines
@@ -44,41 +55,54 @@ printGameLine([]).
 % Parameters: Game line to print (list)
 printGameLine([H]) :-
                      getSymbol(H, S),
-                     %use_module(library(clpfd)),
-                     %put_code(S),
-                     format('~c', S).
+                     write(S).
 
 printGameLine([H|T]) :-
                      getSymbol(H, S),
-                     %use_module(library(clpfd)),
-                     %put_code(S),
-                     format('~c', S),
-                     write('   '),
+                     write(S),
+                     write(' '),
                      printGameLine(T).
 
 printTrenchLine([]).
 
 printTrenchLine([H]) :-
                      getSymbol(H, S),
-                     %use_module(library(clpfd)),
-                     %put_code(S),
-                     format('~c', S).
+                     write(S).
 
 printTrenchLine([H|T]) :-
                      getSymbol(H, S),
-                     %put_code(S),
-                     format('~c', S),
-                     write(' '),
+                     write(S),
                      format('~c', [215]),
-                     write(' '),
                      printTrenchLine(T).
-             
 
+
+printHeader(_) :- 
+        write(' A '), write(' B '), write(' C '), write(' D '), write(' E '), write(' F '), write(' G '), write(' H ').  
+
+
+
+             
+% ==========================================================================
 % Game symbols, can be changed to whatever we want 
-% Returns: Char code, so we can use all the ascii chars (even extended)
-getSymbol(g, 52).
-getSymbol(co, 51).
-getSymbol(ca, 50).
-getSymbol(sa, 49).
-getSymbol(so, 48).
-getSymbol(e, 45).
+% Returns: String containing the symbol
+% ==========================================================================
+
+% Player 1
+getSymbol(g1, '(5)').
+getSymbol(co1, '(4)').
+getSymbol(ca1, '(3)').
+getSymbol(sa1, '(2)').
+getSymbol(so1, '(1)').
+
+% Player 2
+getSymbol(g2, '[5]').
+getSymbol(co2, '[4]').
+getSymbol(ca2, '[3]').
+getSymbol(sa2, '[2]').
+getSymbol(so2, '[1]').
+
+% Empty space
+getSymbol(e, ' - ').
+
+% ==========================================================================
+% ==========================================================================
