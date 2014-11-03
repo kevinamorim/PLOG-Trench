@@ -22,7 +22,9 @@ printGameState([], _).
 printGameState([H|T], 7) :-
                       I2 is 7 * 2,
                       S is abs(14 - I2),
-                      printLineSpaces(S);
+                      printLineSpaces(S),
+                      printBoardLeftRef(7),
+                      write('  '),
                       printTrenchLine(H),
                       nl,
                       I1 is 7 + 1,
@@ -31,23 +33,28 @@ printGameState([H|T], 7) :-
 printGameState([H|T], I) :-
                       I2 is I * 2,
                       S is abs(14 - I2),
-                      printLineSpaces(S);
+                      printLineSpaces(S),
+                      printBoardLeftRef(I),
+                      write('  '),
                       printGameLine(H),
+                      %printBoardRightRef(I),
                       nl,
                       I1 is I + 1,
                       printGameState(T, I1).
 
-printGameState([H|T]) :- printHeader(_), nl, printGameState([H|T], 0).
+printGameState([H|T]) :- printHeader(_), printGameState([H|T], 0), printFooter(_).
                                    
 
 % Prints empty lines
 % Parameters: S: number of line to print.
 % Restrictions: S should be bigger than 0 (zero).
+printLineSpaces(0).
+
 printLineSpaces(S) :-
                 S > 0,
-                write(' '),
-                S1 is S - 1,
-                printLineSpaces(S1).
+                        write(' '),
+                        S1 is S - 1,
+                        printLineSpaces(S1).
 
 % Prints the actual game line
 printGameLine([]).
@@ -76,11 +83,42 @@ printTrenchLine([H|T]) :-
                      printTrenchLine(T).
 
 
-printHeader(_) :- 
-        write(' A '), write(' B '), write(' C '), write(' D '), write(' E '), write(' F '), write(' G '), write(' H ').  
+printHeader(_) :- printLineSpaces(16), write('A'), printLineSpaces(3), write(1), nl.
+printFooter(_) :- printLineSpaces(16), write(8), printLineSpaces(3), write('H').
 
 
+% ==========================================================================
+%  Print Board Structure
+% ==========================================================================
+printBoardLeftRef(I) :- 
+        I < 8,
+             getSymbol(I, S),
+             write(S).
 
+printBoardLeftRef(I) :- 
+         I > 7,
+             S is (I - 7),
+             write(S).
+
+             
+getSymbol(0, 'B').
+getSymbol(1, 'C').
+getSymbol(2, 'D').
+getSymbol(3, 'E').
+getSymbol(4, 'F').
+getSymbol(5, 'G').
+getSymbol(6, 'H').
+getSymbol(7, ' ').
+
+getSymbol(8, 'B').
+getSymbol(9, 'C').
+getSymbol(10, 'D').
+getSymbol(11, 'E').
+getSymbol(12, 'F').
+getSymbol(13, 'G').
+getSymbol(14, 'H').
+getSymbol(15, ' ').
+    
              
 % ==========================================================================
 % Game symbols, can be changed to whatever we want 
