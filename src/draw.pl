@@ -1,17 +1,12 @@
-% g - general
-% co - coronel
-% ca - capitan
-% sa - sargeant 
-% so - soldier
+% ==================================================================================================
+% ==================================================================================================
+%                                          ->|DRAWING|<-
+% ==================================================================================================
+% ==================================================================================================
 
-% Print Game List: ?gameList(X), printGameState(X, 0).
+% Print Game List: ? gameList(X), printGameState(X, 0). (command) 
 printTest(_) :- gameList(X), printGameState(X). % Temporary ;)
 
-% Trench Game - PLOG exercise 
-gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
-          [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
-         [e, e, e, so2, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
-         [ca2, ca2, ca2], [co2, co2], [g2]]).
 
 % Print game state
 
@@ -149,3 +144,16 @@ getSymbol(e, ' - ').
 
 % ==========================================================================
 % ==========================================================================
+
+% g - general
+% co - coronel
+% ca - capitan
+% sa - sargeant 
+% so - soldier
+
+% Trench Game List
+gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
+          [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
+         [e, e, e, so2, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
+         [ca2, ca2, ca2], [co2, co2], [g2]]).
+
