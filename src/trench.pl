@@ -37,7 +37,8 @@ printGameState([H|T], I) :-
                       printBoardLeftRef(I),
                       write('  '),
                       printGameLine(H),
-                      %printBoardRightRef(I),
+                      write('  '),
+                      printBoardRightRef(I),
                       nl,
                       I1 is I + 1,
                       printGameState(T, I1).
@@ -83,24 +84,26 @@ printTrenchLine([H|T]) :-
                      printTrenchLine(T).
 
 
-printHeader(_) :- printLineSpaces(16), write('A'), printLineSpaces(3), write(1), nl.
-printFooter(_) :- printLineSpaces(16), write(8), printLineSpaces(3), write('H').
+printHeader(_) :- printLineSpaces(16), write('A'), printLineSpaces(3), write('P'), nl.
+printFooter(_) :- printLineSpaces(16), write('P'), printLineSpaces(3), write('A').
 
 
 % ==========================================================================
 %  Print Board Structure
 % ==========================================================================
+
 printBoardLeftRef(I) :- 
-        I < 8,
+        I < 16,
              getSymbol(I, S),
              write(S).
 
-printBoardLeftRef(I) :- 
-         I > 7,
-             S is (I - 7),
-             write(S).
+printBoardRightRef(I) :-
+        I < 16,
+                X is (14 - I),
+                getSymbol(X, S),
+                write(S).
 
-             
+          
 getSymbol(0, 'B').
 getSymbol(1, 'C').
 getSymbol(2, 'D').
@@ -110,15 +113,17 @@ getSymbol(5, 'G').
 getSymbol(6, 'H').
 getSymbol(7, ' ').
 
-getSymbol(8, 'B').
-getSymbol(9, 'C').
-getSymbol(10, 'D').
-getSymbol(11, 'E').
-getSymbol(12, 'F').
-getSymbol(13, 'G').
-getSymbol(14, 'H').
+getSymbol(8, 'I').
+getSymbol(9, 'J').
+getSymbol(10, 'K').
+getSymbol(11, 'L').
+getSymbol(12, 'M').
+getSymbol(13, 'N').
+getSymbol(14, 'O').
 getSymbol(15, ' ').
-    
+
+% ==========================================================================
+% ==========================================================================    
              
 % ==========================================================================
 % Game symbols, can be changed to whatever we want 
