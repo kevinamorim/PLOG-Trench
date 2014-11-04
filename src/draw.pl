@@ -18,7 +18,6 @@ printGameState([H|T], 7) :-
                       I2 is 7 * 2,
                       S is abs(14 - I2),
                       printLineSpaces(S),
-                      printBoardLeftRef(7),
                       write('  '),
                       printTrenchLine(H),
                       nl,
@@ -79,8 +78,8 @@ printTrenchLine([H|T]) :-
                      printTrenchLine(T).
 
 
-printHeader(_) :- printLineSpaces(16), write('A'), printLineSpaces(3), write('P'), nl.
-printFooter(_) :- printLineSpaces(16), write('P'), printLineSpaces(3), write('A').
+printHeader(_) :- printLineSpaces(16), write('a'), printLineSpaces(3), write('i'), nl.
+printFooter(_) :- printLineSpaces(16), write('i'), printLineSpaces(3), write('h'), nl.
 
 
 % ==========================================================================
@@ -88,34 +87,46 @@ printFooter(_) :- printLineSpaces(16), write('P'), printLineSpaces(3), write('A'
 % ==========================================================================
 
 printBoardLeftRef(I) :- 
-        I < 16,
-             getSymbol(I, S),
-             write(S).
-
-printBoardRightRef(I) :-
-        I < 16,
-                X is (14 - I),
+        I < 7, !,
+                X is I + 1,
                 getSymbol(X, S),
                 write(S).
 
-          
-getSymbol(0, 'B').
-getSymbol(1, 'C').
-getSymbol(2, 'D').
-getSymbol(3, 'E').
-getSymbol(4, 'F').
-getSymbol(5, 'G').
-getSymbol(6, 'H').
-getSymbol(7, ' ').
+printBoardLeftRef(I) :- 
+        I < 16, !,
+                getSymbol(I, S),
+                write(S).
 
-getSymbol(8, 'I').
-getSymbol(9, 'J').
-getSymbol(10, 'K').
-getSymbol(11, 'L').
-getSymbol(12, 'M').
-getSymbol(13, 'N').
-getSymbol(14, 'O').
-getSymbol(15, ' ').
+printBoardRightRef(I) :-
+        I < 7, !,
+                X is I + 9,
+                getSymbol(X, S),
+                write(S).
+
+printBoardRightRef(I) :-
+        I < 16, !,
+                X is abs(8 - I),
+                getSymbol(X, S),
+                write(S).
+
+
+getSymbol(0, 'a').          
+getSymbol(1, 'b').
+getSymbol(2, 'c').
+getSymbol(3, 'd').
+getSymbol(4, 'e').
+getSymbol(5, 'f').
+getSymbol(6, 'g').
+getSymbol(7, 'h').
+
+getSymbol(8, 'i').
+getSymbol(9, 'j').
+getSymbol(10, 'k').
+getSymbol(11, 'l').
+getSymbol(12, 'm').
+getSymbol(13, 'n').
+getSymbol(14, 'o').
+getSymbol(15, 'p').
 
 % ==========================================================================
 % ==========================================================================    
