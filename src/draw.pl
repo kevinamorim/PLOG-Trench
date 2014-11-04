@@ -79,7 +79,7 @@ printTrenchLine([H|T]) :-
 
 
 printHeader(_) :- printLineSpaces(16), write('a'), printLineSpaces(3), write('i'), nl.
-printFooter(_) :- printLineSpaces(16), write('i'), printLineSpaces(3), write('h'), nl.
+printFooter(_) :- printLineSpaces(16), write('p'), printLineSpaces(3), write('h'), nl.
 
 
 % ==========================================================================

@@ -17,10 +17,13 @@ read_destination(Y) :- write('Choose where to place your penis: '), read(Y), wri
 getPiece(R, C, L, P) :-
         convertAlphaToNum(R, R1),
         convertAlphaToNum(C, C1),
+        write(R1), write(' '), write(C1), nl,
         selectElementAt(R1, C1, L, P).
 
-getPiece(R, C, L, P) :-
-        selectElementAt(R, C, L, P).
+getPiece(R, C) :-
+        gameList(L),
+        getPiece(R, C, L, P),
+        write(P), nl.
 
 % movePiece(Fr, Fc, Tr, Tc, GameList, Piece).
 movePiece([X1, Y1], [X2, Y2], L, P) :-
@@ -38,4 +41,23 @@ movePiece([X1, Y1], [X2, Y2], L, P) :-
         getSymbol(P2, S2),
         write('Piece 2: '), write(S2), nl.
 
-
+% ========================
+% Helpers
+% Rows
+convertAlphaToNum(a, 1).
+convertAlphaToNum(b, 2).
+convertAlphaToNum(c, 3).
+convertAlphaToNum(d, 4).
+convertAlphaToNum(e, 5).
+convertAlphaToNum(f, 6).
+convertAlphaToNum(g, 7).
+convertAlphaToNum(h, 8).
+% Columns
+convertAlphaToNum(i, 1).
+convertAlphaToNum(j, 2).
+convertAlphaToNum(k, 3).
+convertAlphaToNum(l, 4).
+convertAlphaToNum(m, 5).
+convertAlphaToNum(n, 6).
+convertAlphaToNum(o, 7).
+convertAlphaToNum(p, 8).
