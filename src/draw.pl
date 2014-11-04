@@ -18,7 +18,7 @@ printGameState([H|T], 7) :-
                       I2 is 7 * 2,
                       S is abs(14 - I2),
                       printLineSpaces(S),
-                      write('  '),
+                      write('   '),
                       printTrenchLine(H),
                       nl,
                       I1 is 7 + 1,

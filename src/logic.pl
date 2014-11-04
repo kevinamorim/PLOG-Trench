@@ -14,32 +14,52 @@ read_destination(Y) :- write('Choose where to place your penis: '), read(Y), wri
 % getPiece(Row, Column, GameList, Piece).
 %       Row must be in:         [a, b, c, d, e, f, g, h]
 %       Column must be in:      [i, j, k, l, m, n, o, p]
-getPiece(R, C, L, P) :-
+getPiece(L, [R, C], P) :-
         convertAlphaToNum(R, R1),
         convertAlphaToNum(C, C1),
-        write(R1), write(' '), write(C1), nl,
-        selectElementAt(R1, C1, L, P).
+        selectElem(R1, C1, L, P).
 
-getPiece(R, C) :-
-        gameList(L),
-        getPiece(R, C, L, P),
-        write(P), nl.
+% ===========================================
+%       Pieces placement
+% ===========================================
+% setPiece(GameList, Piece, [Pos], NewGameList)
 
-% movePiece(Fr, Fc, Tr, Tc, GameList, Piece).
-movePiece([X1, Y1], [X2, Y2], L, P) :-
-        gameList(L),
-        printGameState(L),
+setPiece(L, P, [R, C], NL) :-
+        nth1(R, L, X),
+        convertToGridPos(R, C, Line, Col),
+        replace(X, Col, P, Res),
+        replace(L, Line, Res, NL).
+
+% ===========================================
+%       Pieces movement
+% ===========================================
+% canMove(GameList, Piece, [From], [To])
+
+% canMove(L, g1, [X1, Y1], [X2, Y2]).
+% canMove(L, g2, [X1, Y1], [X2, Y2]).
+
+% canMove(L, co1, [X1, Y1], [X2, Y2]).
+% canMove(L, co2, [X1, Y1], [X2, Y2]).
+
+% canMove(L, ca1, [X1, Y1], [X2, Y2]).
+% canMove(L, ca2, [X1, Y1], [X2, Y2]).
+
+% canMove(L, sa1, [X1, Y1], [X2, Y2]).
+% canMove(L, sa2, [X1, Y1], [X2, Y2]).
+
+% canMove(L, so1, [X1, Y1], [X2, Y2]).
+% canMove(L, so2, [X1, Y1], [X2, Y2]).
+
+% movePiece(GameList, [From], [To], NewGameList).
+movePiece(L, [X1, Y1], [X2, Y2], NL) :-
         convertAlphaToNum(X1, R1),
         convertAlphaToNum(Y1, C1),
         convertAlphaToNum(X2, R2),
         convertAlphaToNum(Y2, C2),
-        write([R1, C1, R2, C2]), nl,
-        selectElementAt(R1, C1, L, P),
-        getSymbol(P, S1),
-        write('Piece 1: '), write(S1), nl,
-        selectElementAt(R2, C2, L, P2),   
-        getSymbol(P2, S2),
-        write('Piece 2: '), write(S2), nl.
+        getPiece(L, [X1, Y1], P),
+        %canMove(L, P, [R1,C1], [R2,C2]),
+        setPiece(L, e, [R1, C1], L1),
+        setPiece(L1, P, [R2, C2], NL).
 
 % ========================
 % Helpers
