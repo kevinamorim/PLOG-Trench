@@ -30,16 +30,4 @@ replace([H|T], I, X, [H|R]) :-
         NI is I - 1,
         replace(T, NI, X, R).
 
-%
-convertToGridPos(R, C, Line, Col) :-
-        S is R + C,
-        S < 9, !,
-        Line is S - 1,
-        Col is C.
-
-convertToGridPos(R, C, Line, Col) :-
-        S is R + C,
-        Line is S - 1,
-        Col is 9 - R.
-
 % I'm thinking of using this file to create lists management "methods" 

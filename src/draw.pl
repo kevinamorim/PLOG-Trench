@@ -110,23 +110,23 @@ printBoardRightRef(I) :-
                 write(S).
 
 
-getSymbol(0, 'a').          
-getSymbol(1, 'b').
-getSymbol(2, 'c').
-getSymbol(3, 'd').
-getSymbol(4, 'e').
-getSymbol(5, 'f').
-getSymbol(6, 'g').
-getSymbol(7, 'h').
+getSymbol(0, a).
+getSymbol(1, b).
+getSymbol(2, c).
+getSymbol(3, d).
+getSymbol(4, e).
+getSymbol(5, f).
+getSymbol(6, g).
+getSymbol(7, h).
 
-getSymbol(8, 'i').
-getSymbol(9, 'j').
-getSymbol(10, 'k').
-getSymbol(11, 'l').
-getSymbol(12, 'm').
-getSymbol(13, 'n').
-getSymbol(14, 'o').
-getSymbol(15, 'p').
+getSymbol(8, i).
+getSymbol(9, j).
+getSymbol(10, k).
+getSymbol(11, l).
+getSymbol(12, m).
+getSymbol(13, n).
+getSymbol(14, o).
+getSymbol(15, p).
 
 % ==========================================================================
 % ==========================================================================    

@@ -12,12 +12,10 @@ read_destination(Y) :- write('Choose where to place your penis: '), read(Y), wri
                 
 
 % getPiece(Row, Column, GameList, Piece).
-%       Row must be in:         [a, b, c, d, e, f, g, h]
-%       Column must be in:      [i, j, k, l, m, n, o, p]
+%       Row and Columns must be in:         [1, 2, 3, 4, 5, 6, 7, 8]
 getPiece(L, [R, C], P) :-
-        convertAlphaToNum(R, R1),
-        convertAlphaToNum(C, C1),
-        selectElem(R1, C1, L, P).
+        convertToGridPos(R, C, Row, Col),
+        selectElem(Row, Col, L, P).
 
 % ===========================================
 %       Pieces placement
@@ -25,10 +23,10 @@ getPiece(L, [R, C], P) :-
 % setPiece(GameList, Piece, [Pos], NewGameList)
 
 setPiece(L, P, [R, C], NL) :-
-        nth1(R, L, X),
-        convertToGridPos(R, C, Line, Col),
+        convertToGridPos(R, C, Row, Col),
+        nth1(Row, L, X),
         replace(X, Col, P, Res),
-        replace(L, Line, Res, NL).
+        replace(L, Row, Res, NL).
 
 % ===========================================
 %       Pieces movement
@@ -51,15 +49,27 @@ setPiece(L, P, [R, C], NL) :-
 % canMove(L, so2, [X1, Y1], [X2, Y2]).
 
 % movePiece(GameList, [From], [To], NewGameList).
+
 movePiece(L, [X1, Y1], [X2, Y2], NL) :-
         convertAlphaToNum(X1, R1),
         convertAlphaToNum(Y1, C1),
         convertAlphaToNum(X2, R2),
         convertAlphaToNum(Y2, C2),
-        getPiece(L, [X1, Y1], P),
-        %canMove(L, P, [R1,C1], [R2,C2]),
+        getPiece(L, [R1, C1], P),
         setPiece(L, e, [R1, C1], L1),
         setPiece(L1, P, [R2, C2], NL).
+
+%
+convertToGridPos(R, C, Line, Col) :-
+        S is R + C,
+        S < 9, !,
+        Line is S - 1,
+        Col is C.
+
+convertToGridPos(R, C, Line, Col) :-
+        S is R + C,
+        Line is S - 1,
+        Col is 9 - R.
 
 % ========================
 % Helpers
