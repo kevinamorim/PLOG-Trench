@@ -52,8 +52,20 @@ setPiece(L, P, [R, C], NL) :-
 % canMove(L, so1, [X1, Y1], [X2, Y2]).
 % canMove(L, so2, [X1, Y1], [X2, Y2]).
 
-% convertToDistance([SrcRow, SrcCol], [DestRow, DestCol])
-% convertToDistance([R1, C1],  [R2, C2]) :- 
+% convertToDistance([SrcRow, SrcCol], [DestRow, DestCol], distance)
+% Horizontal movement
+convertToDistance([R1, C1],  [R2, C2], D) :- 
+        R1 == R2,
+        D is abs(C2 - C1).
+
+% Vertical movement
+convertToDistance([R1, C1], [R2, C2], D) :-
+        C1 == C2,
+        D is abs(R2 - R1).
+
+% Diagonal movement
+convertToDistance([R1, C1], [R2, C2], D) :- 
+        D is 0.
 
 % movePiece(GameList, [From], [To], NewGameList).
 
