@@ -42,4 +42,3 @@ convertToGridPos(R, C, Line, Col) :-
         Line is S - 1,
         Col is 9 - R.
 
-% I'm thinking of using this file to create lists management "methods" 
