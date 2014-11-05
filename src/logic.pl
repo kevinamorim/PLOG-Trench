@@ -2,22 +2,12 @@
 :- consult(list_stuff).
 :- consult(converter).
 
-% Print Game List: ? gameList(X), printGameState(X, 0). (command) 
-printTest(_) :- gameList(X), printGameState(X). % Temporary ;)
-
-% User input, just testing stuff...
-
-play(X, Y) :- printTest(a), nl, nl, read_piece(X), read_destination(Y).
-
-
-read_piece(X) :- write('Choose a piça: '), read(X), write('Well done, you choosed this PIÇA: '), write(X), nl.
-
-read_destination(Y) :- write('Choose where to place your penis: '), read(Y), write('Ok, your penis is here: '), write(Y), nl.
-                
-
+% ===========================================
+%       Pieces getter
+% ===========================================
 % getPiece(GameList, [Row, Column], Piece).
 %       Row and Columns must be in:         [1, 2, 3, 4, 5, 6, 7, 8]
-getPiece(L, [R, C], P) :-
+getPiece(L, [R,C], P) :-
         convertToGridPos(R, C, Row, Col),
         selectElem(Row, Col, L, P).
 
@@ -25,7 +15,6 @@ getPiece(L, [R, C], P) :-
 %       Pieces placement
 % ===========================================
 % setPiece(GameList, Piece, [Pos], NewGameList)
-
 setPiece(L, P, [R, C], NL) :-
         convertToGridPos(R, C, Row, Col),
         nth1(Row, L, X),
@@ -36,6 +25,8 @@ setPiece(L, P, [R, C], NL) :-
 %       Pieces movement
 % ===========================================
 % canMove(GameList, Piece, [From], [To])
+
+canMove(_, _, _, _). % !REMOVE!
 
 % canMove(L, g1, [X1, Y1], [X2, Y2]).
 % canMove(L, g2, [X1, Y1], [X2, Y2]).
@@ -69,7 +60,7 @@ convertToDistance([R1, C1], [R2, C2], D) :-
 
 % movePiece(GameList, [From], [To], NewGameList).
 
-movePiece(L, [X1, Y1], [X2, Y2], NL) :-
+movePiece(L, [X1,Y1], [X2,Y2], NL) :-
         convertAlphaToNum(X1, R1),
         convertAlphaToNum(Y1, C1),
         convertAlphaToNum(X2, R2),

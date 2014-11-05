@@ -1,19 +1,19 @@
 /* -*- Mode:Prolog; coding:iso-8859-1; -*- */
 
 % Used to initialize the game per se
-
 :- consult(logic).
+:- consult(io).
 
 playGame(_) :-
         initialize(L),
         printGameState(L),
         firstPlayer(P),
-        play(L, P).
+        playGame(L, P).
              
 % play(GameList, Player).
-playGame(L, P) :-
-        gameOver(L, P), !,
-        write('Over'), nl.
+%playGame(L, P) :-
+%        gameOver(L, P), !,
+%        write('Over'), nl.
 
 playGame(L, P) :-
         getPlayerMove(L, P, NL),
@@ -28,7 +28,17 @@ nextPlayer(p2, p1).
 
 % Player move
 % getPlayerMove(GameList, Player, NewGameList)
-getPlayerMove(L, P, NL).   
+getPlayerMove(L, Pl, NL) :-
+        write('Player: '), write(Pl), nl,
+        write('Select Piece (xy): '),
+        readPosition([A1,A2]), !,
+        write('Select Target (xy): '),
+        readPosition([B1,B2]), !,
+        convertAlphaToNum(A1, R),
+        convertAlphaToNum(A2, C),
+        getPiece(L, [R,C], P),
+        canMove(L, P, [A1,A2], [B1,B2]), !,
+        movePiece(L, [A1,A2], [B1,B2], NL).
                     
 % ==============================
 %       Game Initialization
@@ -51,6 +61,8 @@ initialize(X) :- gameList(X).
 % ==============================
 %       Game Over
 % ==============================
-gameOver(L, P).
+% gameOver(L, P).
+
+gameOver(_,_). % !REMOVE!
 
 % Check player: verifies if any piece of the passed player exists... 
