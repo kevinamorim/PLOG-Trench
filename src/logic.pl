@@ -77,28 +77,3 @@ movePiece(L, [X1, Y1], [X2, Y2], NL) :-
         getPiece(L, [R1, C1], P),
         setPiece(L, e, [R1, C1], L1),
         setPiece(L1, P, [R2, C2], NL).
-
-% ==============================
-%       Game Initialization
-% ==============================
-% Returns the initial game list, with all the pieces in their initial position
-
-% g - general
-% co - coronel
-% ca - capitan
-% sa - sargeant 
-% so - soldier
-
-gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
-          [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
-         [e, e, e, so2, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
-         [ca2, ca2, ca2], [co2, co2], [g2]]).
-
-initialize(X) :- gameList(X).
-
-% ==============================
-%       Game Over
-% ==============================
-gameOver(X) :- checkPlayer(X, 1), !, checkPlayer(X, 2).
-
-% Check player: verifies if any piece of the passed player exists... 
