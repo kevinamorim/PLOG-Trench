@@ -29,5 +29,3 @@ replace([H|T], I, X, [H|R]) :-
         I > 1,
         NI is I - 1,
         replace(T, NI, X, R).
-
-% I'm thinking of using this file to create lists management "methods" 

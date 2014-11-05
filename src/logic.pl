@@ -1,5 +1,9 @@
 :- consult(draw).
 :- consult(list_stuff).
+:- consult(converter).
+
+% Print Game List: ? gameList(X), printGameState(X, 0). (command) 
+printTest(_) :- gameList(X), printGameState(X). % Temporary ;)
 
 % User input, just testing stuff...
 
@@ -11,7 +15,7 @@ read_piece(X) :- write('Choose a piça: '), read(X), write('Well done, you choose
 read_destination(Y) :- write('Choose where to place your penis: '), read(Y), write('Ok, your penis is here: '), write(Y), nl.
                 
 
-% getPiece(Row, Column, GameList, Piece).
+% getPiece(GameList, [Row, Column], Piece).
 %       Row and Columns must be in:         [1, 2, 3, 4, 5, 6, 7, 8]
 getPiece(L, [R, C], P) :-
         convertToGridPos(R, C, Row, Col),
@@ -48,6 +52,9 @@ setPiece(L, P, [R, C], NL) :-
 % canMove(L, so1, [X1, Y1], [X2, Y2]).
 % canMove(L, so2, [X1, Y1], [X2, Y2]).
 
+% convertToDistance([SrcRow, SrcCol], [DestRow, DestCol])
+% convertToDistance([R1, C1],  [R2, C2]) :- 
+
 % movePiece(GameList, [From], [To], NewGameList).
 
 movePiece(L, [X1, Y1], [X2, Y2], NL) :-
@@ -59,35 +66,27 @@ movePiece(L, [X1, Y1], [X2, Y2], NL) :-
         setPiece(L, e, [R1, C1], L1),
         setPiece(L1, P, [R2, C2], NL).
 
-%
-convertToGridPos(R, C, Line, Col) :-
-        S is R + C,
-        S < 9, !,
-        Line is S - 1,
-        Col is C.
+% ==============================
+%       Game Initialization
+% ==============================
+% Returns the initial game list, with all the pieces in their initial position
 
-convertToGridPos(R, C, Line, Col) :-
-        S is R + C,
-        Line is S - 1,
-        Col is 9 - R.
+% g - general
+% co - coronel
+% ca - capitan
+% sa - sargeant 
+% so - soldier
 
-% ========================
-% Helpers
-% Rows
-convertAlphaToNum(a, 1).
-convertAlphaToNum(b, 2).
-convertAlphaToNum(c, 3).
-convertAlphaToNum(d, 4).
-convertAlphaToNum(e, 5).
-convertAlphaToNum(f, 6).
-convertAlphaToNum(g, 7).
-convertAlphaToNum(h, 8).
-% Columns
-convertAlphaToNum(i, 1).
-convertAlphaToNum(j, 2).
-convertAlphaToNum(k, 3).
-convertAlphaToNum(l, 4).
-convertAlphaToNum(m, 5).
-convertAlphaToNum(n, 6).
-convertAlphaToNum(o, 7).
-convertAlphaToNum(p, 8).
+gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
+          [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
+         [e, e, e, so2, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
+         [ca2, ca2, ca2], [co2, co2], [g2]]).
+
+initialize(X) :- gameList(X).
+
+% ==============================
+%       Game Over
+% ==============================
+gameOver(X) :- checkPlayer(X, 1), !, checkPlayer(X, 2).
+
+% Check player: verifies if any piece of the passed player exists... 
