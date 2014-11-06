@@ -67,6 +67,31 @@ calculateDistance(SRC, DST, D) :-
         SRC \== DST, D is abs(SRC - DST).
 % ===============================
 % ===============================
+
+% ===============================
+% MAX DISTANCE
+% ===============================
+% Predicates that returns the maximum distance that each piece can move.
+
+% Base case
+maxDistanceFor(_, M) :- M is 0.
+
+% Player 1
+maxDistanceFor(g1, M) :- M is 5.
+maxDistanceFor(co1, M) :- M is 4.
+maxDistanceFor(ca1, M) :- M is 3.
+maxDistanceFor(sa1, M) :- M is 2.
+maxDistanceFor(so1, M) :- M is 1.
+
+% Player2
+maxDistanceFor(g2, M) :- M is 5.
+maxDistanceFor(co2, M) :- M is 4.
+maxDistanceFor(ca2, M) :- M is 3.
+maxDistanceFor(sa2, M) :- M is 2.
+maxDistanceFor(so2, M) :- M is 1.
+
+% ===============================
+% ===============================
         
 % movePiece(GameList, [From], [To], NewGameList).
 
