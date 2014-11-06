@@ -1,3 +1,6 @@
+% ===========================================
+%       Includes
+% ===========================================
 :- consult(draw).
 :- consult(list_stuff).
 :- consult(converter).
@@ -92,7 +95,91 @@ maxDistanceFor(so2, M) :- M is 1.
 
 % ===============================
 % ===============================
-        
+
+% ===============================
+% DIRECTION
+% ===============================
+% 'f' -> Front
+% 'b' -> Back
+% 'l' -> Left
+% 'r' -> Right
+% 'd' -> Diagonal
+getDirection([R1, C1], [R2, C2], D) :-
+        R1 == R2, C1 \== C2, D = d.
+
+getDirection([R1, C1], [R2, C2], D) :-
+        R1 \== R2, C1 == C2, D = d.
+
+getDirection([R1, C1], [R2, C2], D) :- 
+        R1 \== R2, C1 \== C2, getPerpendicularDirection([R1, C1], [R2, C2], D).
+
+getPerpendicularDirection([R1, C1], [R2, C2], D) :-
+        R1 < R2, C1 < C2, D = f.
+
+getPerpendicularDirection([R1, C1], [R2, C2], D) :-
+        R1 > R2, C1 > C2, D = b.
+
+getPerpendicularDirection([R1, C1], [R2, C2], D) :-
+        R1 > R2, C1 < C2, D = r.
+
+getPerpendicularDirection([R1, C1], [R2, C2], D) :-
+        R1 < R2, C1 > C2, D = l. 
+
+% ===============================
+% ===============================
+
+% ===============================
+% ALLOWED DIRECTION
+% ===============================
+% Returns allowed directions for each piece.
+
+% Player 1
+
+getAllowedDir(g1, D) :- D == d.
+getAllowedDir(g1, D) :- D == f.
+getAllowedDir(g1, D) :- D == b.
+getAllowedDir(g1, D) :- D == l.
+getAllowedDir(g1, D) :- D == r.
+
+getAllowedDir(co1, D) :- D == d.
+getAllowedDir(co1, D) :- D == f.
+getAllowedDir(co1, D) :- D == l.
+getAllowedDir(co1, D) :- D == r.
+
+getAllowedDir(ca1, D) :- D == d.
+getAllowedDir(ca1, D) :- D == f.
+getAllowedDir(ca1, D) :- D == b.
+
+getAllowedDir(sa1, D) :- D == d.
+getAllowedDir(sa1, D) :- D == f.
+
+getAllowedDir(so1, D) :- D == d.
+
+% Player 2
+
+getAllowedDir(g2, D) :- D == d.
+getAllowedDir(g2, D) :- D == f.
+getAllowedDir(g2, D) :- D == b.
+getAllowedDir(g2, D) :- D == l.
+getAllowedDir(g2, D) :- D == r.
+
+getAllowedDir(co2, D) :- D == d.
+getAllowedDir(co2, D) :- D == f.
+getAllowedDir(co2, D) :- D == l.
+getAllowedDir(co2, D) :- D == r.
+
+getAllowedDir(ca2, D) :- D == d.
+getAllowedDir(ca2, D) :- D == f.
+getAllowedDir(ca2, D) :- D == b.
+
+getAllowedDir(sa2, D) :- D == d.
+getAllowedDir(sa2, D) :- D == f.
+
+getAllowedDir(so2, D) :- D == d.
+
+% ===============================
+% ===============================
+
 % movePiece(GameList, [From], [To], NewGameList).
 
 movePiece(L, [X1,Y1], [X2,Y2], NL) :-
