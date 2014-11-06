@@ -43,21 +43,31 @@ canMove(_, _, _, _). % !REMOVE!
 % canMove(L, so1, [X1, Y1], [X2, Y2]).
 % canMove(L, so2, [X1, Y1], [X2, Y2]).
 
-% convertToDistance([SrcRow, SrcCol], [DestRow, DestCol], distance)
-% Horizontal movement
-convertToDistance([R1, C1],  [R2, C2], D) :- 
-        R1 == R2,
-        D is abs(C2 - C1).
 
-% Vertical movement
-convertToDistance([R1, C1], [R2, C2], D) :-
-        C1 == C2,
-        D is abs(R2 - R1).
+% ===============================
+% DISTANCE
+% ===============================
+% getDistance([SrcRow, SrcCol], [DestRow, DestCol], distance)
+% Checks first if the movement is diagonal or perpendicular. 
+% If only one of the coordinates changes: diagonal
+% If both coordinates changes: perpendicular
+% We use a generic method for calculating the distance, passing to it the two coordinates that will 
+%   make the distance.
+getDistance([R1, C1], [R2, C2], D) :- 
+        R1 == R2, C1 \== C2, convertAlphaToNum(C1, X), convertAlphaToNum(C2, Y), calculateDistance(X, Y, D).
 
-% Diagonal movement
-convertToDistance([R1, C1], [R2, C2], D) :- 
-        D is 0.
+getDistance([R1, C1], [R2, C2], D) :-
+        R1 \== R2, C1 == C2, convertAlphaToNum(R1, X), convertAlphaToNum(R2, Y), calculateDistance(X, Y, D).
 
+getDistance([R1, C1], [R2, C2], D) :-
+        R1 \== R2, C1 \== C2, convertAlphaToNum(R1, X), convertAlphaToNum(R2, Y), calculateDistance(X, Y, D).
+
+% Calculates the distance between two coordinates.
+calculateDistance(SRC, DST, D) :-
+        SRC \== DST, D is abs(SRC - DST).
+% ===============================
+% ===============================
+        
 % movePiece(GameList, [From], [To], NewGameList).
 
 movePiece(L, [X1,Y1], [X2,Y2], NL) :-
