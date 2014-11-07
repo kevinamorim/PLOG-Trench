@@ -23,9 +23,17 @@ selectElem(Row, Col, L, E) :-
         nth1(Row, L, X),
         nth1(Col, X, E).
 
+% replaces the list element in the index I by X
 replace([_|T], 1, X, [X|T]).
 
 replace([H|T], I, X, [H|R]) :-
         I > 1,
         NI is I - 1,
         replace(T, NI, X, R).
+
+% verifies if an element is member of a matrix (row by row)
+member_matrix(_, []) :- fail.
+
+member_matrix(X, [M|T]) :-
+        member(X, M);
+        member_matrix(X, T).

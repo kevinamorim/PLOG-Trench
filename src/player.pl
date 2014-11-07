@@ -12,3 +12,5 @@ playerPieces(p2, [g2, co2, ca2, sa2, so2]).
 % checkPiecePlayer(piece, player)
 % Checks the player that owns a given piece.
 checkPiecePlayer(PI, P) :- playerPieces(P, L), member(PI, L), !.
+
+players([p1,p2]).
