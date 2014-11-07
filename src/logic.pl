@@ -31,7 +31,7 @@ move_piece(L, [X1, Y1], [X2, Y2], NL) :-
 % ===========================================
 % getPiece(GameList, [Row, Column], Piece).
 %       Row and Columns must be in:         [1, 2, 3, 4, 5, 6, 7, 8]
-get_piece(L, [R,C], P) :-
+get_piece(L, [R,C], P) :-  
         convert_to_grid_pos(R, C, Row, Col),
         select_elem(Row, Col, L, P).
 
@@ -75,10 +75,10 @@ get_distance([R1, C1], [R2, C2], D) :-
         R1 \== R2, C1 == C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y), calculate_distance(X, Y, D).
 
 get_distance([R1, C1], [R2, C2], D) :-
-        R1 \== R2, C1 \== C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y),calculate_distancee(X, Y, D).
+        R1 \== R2, C1 \== C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y),calculate_distance(X, Y, D).
 
 % Calculates the distance between two coordinates.
-calculate_distancee(SRC, DST, D) :-
+calculate_distance(SRC, DST, D) :-
         SRC \== DST, D is abs(SRC - DST).
 % ===========================================
 % ===========================================
@@ -96,30 +96,54 @@ get_direction(L, [R1, C1], [R2, C2], D) :-
         R1 \== R2, C1 == C2, D = d;
         R1 \== R2, C1 \== C2, get_perpendicular_direction(L, [R1, C1], [R2, C2], D).
 
-get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
-        get_piece(L, [R1, C1], PI),
+get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-  
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),      
+        get_piece(L, [X1, Y1], PI),
         check_piece_player(PI, P),
         P == p1,
-        R1 < R2, C1 < C2, D = f;
+        X1 < X2, Y1 < Y2, D = f;
         
-        get_piece(L, [R1, C1], PI),
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),   
+        get_piece(L, [X1, Y1], PI),
         check_piece_player(PI, P),
         P == p2,
-        R1 < R2, C1 < C2, D = b;
+        X1 < X2, Y1 < Y2, D = b;
         
-        get_piece(L, [R1, C1], PI),
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),  
+        get_piece(L, [X1, Y1], PI),
         check_piece_player(PI, P),
         P == p1,
-        R1 > R2, C1 > C2, D = b;
+        X1 > X2, Y1 > Y2, D = b;
         
-        get_piece(L, [R1, C1], PI),
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2), 
+        get_piece(L, [X1, Y1], PI),
         check_piece_player(PI, P),
         P == p2,
-        R1 > R2, C1 > C2, D = f;
+        X1 > X2, Y1 > Y2, D = f;
         
-        R1 > R2, C1 < C2, D = r;
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2), 
+        X1 > X2, Y1 < Y2, D = r;
          
-        R1 < R2, C1 > C2, D = l. 
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2), 
+        X1 < X2, Y1 > Y2, D = l. 
 
 % ===========================================
 % ===========================================
@@ -128,23 +152,32 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 % ||||||||||Sandbox|||||||||||||
 % ??????????????????????????????
 
+
 verify_traject(L, [R1, C1], [R2, C2]) :-
         get_direction(L, [R1, C1], [R2, C2], DIR),
         convert_alpha_num(R1, A1),
-        convert_alpha_num(R2, A2),
+        convert_alpha_num(C1, A2),
         get_piece(L, [A1, A2], PI),
         check_piece_player(PI, P),
         P == p1,
         DIR == f,
-        check_road_front_p1(L, [R1, R2], A2 - A1).
+        DELTA is (A2 - A1),
+        check_road_front_p1(L, [R1, C1], DELTA).
 
-check_road_front_p1(_, _, 0) :- !.
-check_road_front_p1(L, [X1, X2], T) :- 
-        convert_alpha_num(X1, A0), 
-        convert_alpha_num(X2, A2), 
-        A1 = A0 + T, 
-        get_piece(L, [A1, A2], PI), 
+check_road_front_p1(_, _, _, 0) :- !.
+check_road_front_p1(L, [R1, C1], T) :- 
+        convert_alpha_num(R1, X1), 
+        convert_alpha_num(C1, Y1), 
+        TX is X1 + T,
+        TY is Y1 + T,
+        get_piece(L, [TX, TY], PI), 
+        write(PI), nl,
         PI == e,
         Y is T - 1,
-        check_road_front_p1(L, [X1, X2], Y).
+        check_road_front_p1(L, [R1, C1], Y). 
+
+/**
+verify_traject(L, [R1, C1], [R2, C2]) :-
+        get_direction(L, [R1, C1], [R2, C2], DIR),
+        write(DIR).*/
 

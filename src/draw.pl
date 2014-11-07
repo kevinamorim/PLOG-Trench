@@ -31,6 +31,7 @@ print_board([H|T], I) :-
                       I1 is 7 + 1,
                       print_board(T, I1).
 
+% Prints a board 
 print_board([H|T]) :- print_board_header(_), print_board([H|T], 0), print_board_footer(_).
                                    
 

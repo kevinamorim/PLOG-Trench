@@ -109,3 +109,9 @@ piece_has_moves(GameList, [X,Y], [A1,A2]) :-
                 can_move(GameList, [X,Y], [A1,A2]).
 
 piece_has_moves([_|_], [_], [_]).
+
+% ==============================
+%       DEBUG 
+% ==============================
+% Debugging predicates. Not to be used in release.
+print_test :- game_list(X), print_board(X).
