@@ -64,10 +64,18 @@ initialize(X) :- game_list(X).
 %       - None of the pieces in the board has a valid move;
 %       - No pieces has been 'consumed' in 30 moves.
 game_over(GameList) :-
-        \+ player_has_pieces(GameList, p1), write('Player 2 wins'), !, nl;
-        \+ player_has_pieces(GameList, p2), write('Player 1 wins'), !, nl;
-        player_has_moves(GameList, p1, 1, 1), write('Player 2 wins'), !, nl;
-        player_has_moves(GameList, p2, 1, 1), write('Player 1 wins'), !, nl.
+        \+ player_has_pieces(GameList, p1),
+                write('Player 1 has no pieces left.'), nl,
+                write('Player 2 wins'), !, nl;
+        \+ player_has_pieces(GameList, p2),
+                write('Player 2 has no pieces left.'), nl,
+                write('Player 1 wins'), !, nl;
+        \+ player_has_moves(GameList, p1, 1, 1),
+                write('Player 1 has no moves left.'), nl,
+                write('Player 2 wins'), !, nl;
+        \+ player_has_moves(GameList, p2, 1, 1),
+                write('Player 2 has no moves left.'), nl,
+                write('Player 1 wins'), !, nl.
 
 % checks if the player has any piece remaining
 player_has_pieces(GameList, Player) :-
@@ -80,14 +88,16 @@ player_has_pieces(GameList, [P|R]) :-
         member_matrix(P,GameList);
         player_has_pieces(GameList, R).
 
+% checks if the player has any pieces width a valid move
 player_has_moves(GameList, Player, X, Y) :-
         X < 9, Y < 9,
         get_piece(GameList, [X,Y], P),
         check_piece_player(P, Player),
-        write('> Piece: '), write(P), nl,
+        %write('> Piece: '), write(P), nl,
         piece_has_moves(GameList, [X,Y], [1,1]).
 
 player_has_moves(GameList, Player, X, Y) :-
+        %write('> FAILED'), nl,
         X < 9, !,
                 X1 is X + 1,
                 player_has_moves(GameList, Player, X1, Y);
@@ -96,19 +106,22 @@ player_has_moves(GameList, Player, X, Y) :-
                 player_has_moves(GameList, Player, 1, Y1);
         fail.
 
-piece_has_moves([_|_], [X,Y], [X,Y]) :- fail.
+% checks if a piece has a valid movement to it
+piece_has_moves(GameList, [X,Y], [A1,A2]) :-
+        A1 < 9, A2 < 9,
+        get_piece(GameList, [X,Y], P),
+        write('> Testing move of: '), write(P), write(' from '), write([X,Y]), write(' to '), write([A1,A2]), nl,
+        can_move(GameList, [X,Y], [A1,A2]),
+        write('> can move: '), write(P), nl.
 
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
         A1 < 9, !,
                 B1 is A1 + 1,
-                piece_has_moves(GameList, [X,Y], [B1,A2]),
-                can_move(GameList, [X,Y], [A1,A2]);
+                piece_has_moves(GameList, [X,Y], [B1,A2]);
         A2 < 9, !,
                 B2 is A2 + 1,
                 piece_has_moves(GameList, [X,Y], [1,B2]);
-                can_move(GameList, [X,Y], [A1,A2]).
-
-piece_has_moves([_|_], [_], [_]).
+        fail.
 
 % ==============================
 %       DEBUG 

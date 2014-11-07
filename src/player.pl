@@ -11,7 +11,7 @@ player_pieces(p2, [g2, co2, ca2, sa2, so2]).
 
 % checkPiecePlayer(piece, player)
 % Checks the player that owns a given piece.
-check_piece_player(PI, P) :- player_pieces(P, L), member(PI, L), !.
+check_piece_player(PI, P) :- player_pieces(P, L), !, member(PI, L), !.
 
 players([p1,p2]).
 
