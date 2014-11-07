@@ -2,6 +2,7 @@
 
 :- consult(logic).
 :- consult(io).
+:- consult(draw).
 
 % play_game().
 play_game(_) :-
@@ -28,12 +29,12 @@ read_player_move(L, Pl, NL) :-
         readPosition([A1,A2]),
         convert_alpha_num(A1, R),
         convert_alpha_num(A2, C),
-        getPiece(L, [R,C], P),
-        checkPiecePlayer(P, Pl), !,
+        get_piece(L, [R,C], P),
+        check_piece_player(P, Pl), !,
         write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
         write('Select Target (xy): '),
         readPosition([B1,B2]),
-        movePiece(L, [A1,A2], [B1,B2], NL), !;
+        move_piece(L, [A1,A2], [B1,B2], NL), !;
         %else : happens when the player inserts coordinates of a piece that it's not his
         read_player_move(L, Pl, NL).
                     
@@ -70,7 +71,7 @@ game_over(GameList) :-
 
 % checks if the player has any piece remaining
 player_has_pieces(GameList, Player) :-
-        playerPieces(Player, L),
+        player_pieces(Player, L),
         player_has_pieces(GameList, L).
 
 player_has_pieces([_|_], []) :- fail.
@@ -89,14 +90,14 @@ player_has_moves(GameList, Player, X, Y) :-
         X < 9, !,
                 X1 is X + 1,
                 player_has_moves(GameList, Player, X1, Y),
-                getPiece(GameList, [X,Y], P),
-                checkPiecePlayer(P, Player), !,
+                get_piece(GameList, [X,Y], P),
+                check_piece_player(P, Player), !,
                 piece_has_moves(GameList, [X,Y], [1,1]);
         Y < 9, !,
                 Y1 is Y + 1,
                 player_has_moves(GameList, Player, 1, Y1),
-                getPiece(GameList, [X,Y], P),
-                checkPiecePlayer(P, Player), !,
+                get_piece(GameList, [X,Y], P),
+                check_piece_player(P, Player), !,
                 piece_has_moves(GameList, [X,Y], [1,1]).
 
 player_has_moves([_|_], _, _, _).
@@ -107,12 +108,17 @@ piece_has_moves(GameList, [X,Y], [A1,A2]) :-
         A1 < 9, !,
                 B1 is A1 + 1,
                 piece_has_moves(GameList, [X,Y], [B1,A2]),
-                canMove(GameList, [X,Y], [A1,A2]);
+                can_move(GameList, [X,Y], [A1,A2]);
         A2 < 9, !,
                 B2 is A2 + 1,
                 piece_has_moves(GameList, [X,Y], [1,B2]);
-                canMove(GameList, [X,Y], [A1,A2]).
+                can_move(GameList, [X,Y], [A1,A2]).
 
 piece_has_moves([_|_], [_], [_]).
 
-               
+% ==============================
+%       DEBUG 
+% ==============================
+% Debugging predicates. Not to be used in release.
+print_test :- game_list(X), print_board(X).
+
