@@ -5,4 +5,4 @@
 readPosition([A,B]) :-
         get_char(A),
         get_char(B),
-        get_char('\n').
+        get_char(_).
