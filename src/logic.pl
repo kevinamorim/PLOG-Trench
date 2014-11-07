@@ -4,6 +4,7 @@
 :- consult(draw).
 :- consult(list_stuff).
 :- consult(converter).
+:- consult(player).
 
 % ===========================================
 %       Pieces getter
