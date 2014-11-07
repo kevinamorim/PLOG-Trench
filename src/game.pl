@@ -88,3 +88,7 @@ playerHasPieces(GameList, [P|R]) :-
         playerHasPieces(GameList, R).
 
 % Check player: verifies if any piece of the passed player exists... 
+
+
+
+printTest(_) :- initialize(X), printGameState(X).
