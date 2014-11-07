@@ -67,3 +67,7 @@ initialize(X) :- gameList(X).
 gameOver(_,_). % !REMOVE!
 
 % Check player: verifies if any piece of the passed player exists... 
+
+
+
+printTest(_) :- initialize(X), printGameState(X).
