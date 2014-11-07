@@ -13,12 +13,12 @@
 
 % Select an element in a matrix
 % selectElem(Row, Column, List, Element)
-selectElem(Row, Col, L, E) :-
+select_elem(Row, Col, L, E) :-
         %convertToGridPos(R, C, Line, Col),
         nth1(Row, L, X),
         nth1(Col, X, E).
 
-selectElem(Row, Col, L, E) :-
+select_elem(Row, Col, L, E) :-
         %convertToGridPos(R, C, Line, Col),
         nth1(Row, L, X),
         nth1(Col, X, E).

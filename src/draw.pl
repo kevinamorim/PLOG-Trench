@@ -7,121 +7,115 @@
 
 % Parameters: List to print, Starting line
 % TODO: Verify if I is bigger than the matrix rows.
-printGameState([], _).
+print_board([], _).
 
-printGameState([H|T], 7) :-
-                      I2 is 7 * 2,
-                      S is abs(14 - I2),
-                      printLineSpaces(S),
-                      write('   '),
-                      printTrenchLine(H),
-                      nl,
-                      I1 is 7 + 1,
-                      printGameState(T, I1).
-
-printGameState([H|T], I) :-
+print_board([H|T], I) :-
+                I \= 7,
                       I2 is I * 2,
                       S is abs(14 - I2),
-                      printLineSpaces(S),
-                      printBoardLeftRef(I),
+                      print_spaces(S),
+                      print_board_left_ref(I),
                       write('  '),
-                      printGameLine(H),
+                      print_board_line(H),
                       write('  '),
-                      printBoardRightRef(I),
+                      print_board_right_ref(I),
                       nl,
                       I1 is I + 1,
-                      printGameState(T, I1).
+                      print_board(T, I1);
+                I2 is 7 * 2,
+                      S is abs(14 - I2),
+                      print_spaces(S),
+                      write('   '),
+                      print_board_trench(H),
+                      nl,
+                      I1 is 7 + 1,
+                      print_board(T, I1).
 
-printGameState([H|T]) :- printHeader(_), printGameState([H|T], 0), printFooter(_).
+print_board([H|T]) :- print_board_header(_), print_board([H|T], 0), print_board_footer(_).
                                    
 
 % Prints empty lines
 % Parameters: S: number of line to print.
 % Restrictions: S should be bigger than 0 (zero).
-printLineSpaces(0).
+print_spaces(0).
 
-printLineSpaces(S) :-
+print_spaces(S) :-
                 S > 0,
                         write(' '),
                         S1 is S - 1,
-                        printLineSpaces(S1).
+                        print_spaces(S1).
 
 % Prints the actual game line
-printGameLine([]).
+print_board_line([]).
 
 % Parameters: Game line to print (list)
-printGameLine([H]) :-
-                     getSymbol(H, S),
+print_board_line([H]) :-
+                     get_board_symbol(H, S),
                      write(S).
 
-printGameLine([H|T]) :-
-                     getSymbol(H, S),
+print_board_line([H|T]) :-
+                     get_board_symbol(H, S),
                      write(S),
                      write(' '),
-                     printGameLine(T).
+                     print_board_line(T).
 
-printTrenchLine([]).
+print_board_trench([]).
 
-printTrenchLine([H]) :-
-                     getSymbol(H, S),
+print_board_trench([H]) :-
+                     get_board_symbol(H, S),
                      write(S).
 
-printTrenchLine([H|T]) :-
-                     getSymbol(H, S),
+print_board_trench([H|T]) :-
+                     get_board_symbol(H, S),
                      write(S),
                      format('~c', [215]),
-                     printTrenchLine(T).
+                     print_board_trench(T).
 
 
-printHeader(_) :- printLineSpaces(16), write('a'), printLineSpaces(3), write('i'), nl.
-printFooter(_) :- printLineSpaces(16), write('p'), printLineSpaces(3), write('h'), nl.
+print_board_header(_) :- print_spaces(16), write('a'), print_spaces(3), write('i'), nl.
+print_board_footer(_) :- print_spaces(16), write('p'), print_spaces(3), write('h'), nl.
 
 
 % ==========================================================================
 %  Print Board Structure
 % ==========================================================================
-
-printBoardLeftRef(I) :- 
+print_board_left_ref(I) :- 
         I < 7, !,
                 X is I + 1,
-                getSymbol(X, S),
-                write(S).
-
-printBoardLeftRef(I) :- 
+                get_symbol(X, S),
+                write(S);
         I < 16, !,
-                getSymbol(I, S),
-                write(S).
+                get_symbol(I, S),
+                write(S).    
 
-printBoardRightRef(I) :-
+print_board_right_ref(I) :-
         I < 7, !,
                 X is I + 9,
-                getSymbol(X, S),
-                write(S).
-
-printBoardRightRef(I) :-
+                get_symbol(X, S),
+                write(S);
         I < 16, !,
                 X is abs(8 - I),
-                getSymbol(X, S),
-                write(S).
+                get_symbol(X, S),
+                write(S).    
 
 
-getSymbol(0, a).
-getSymbol(1, b).
-getSymbol(2, c).
-getSymbol(3, d).
-getSymbol(4, e).
-getSymbol(5, f).
-getSymbol(6, g).
-getSymbol(7, h).
+get_symbol(0, a).
+get_symbol(1, b).
+get_symbol(2, c).
+get_symbol(3, d).
+get_symbol(4, e).
+get_symbol(5, f).
+get_symbol(6, g).
+get_symbol(7, h).
 
-getSymbol(8, i).
-getSymbol(9, j).
-getSymbol(10, k).
-getSymbol(11, l).
-getSymbol(12, m).
-getSymbol(13, n).
-getSymbol(14, o).
-getSymbol(15, p).
+get_symbol(8, i).
+get_symbol(9, j).
+get_symbol(10, k).
+get_symbol(11, l).
+get_symbol(12, m).
+get_symbol(13, n).
+get_symbol(14, o).
+get_symbol(15, p).
 
 % ==========================================================================
 % ==========================================================================    
@@ -132,21 +126,21 @@ getSymbol(15, p).
 % ==========================================================================
 
 % Player 1
-getSymbol(g1, '(5)').
-getSymbol(co1, '(4)').
-getSymbol(ca1, '(3)').
-getSymbol(sa1, '(2)').
-getSymbol(so1, '(1)').
+get_board_symbol(g1, '(5)').
+get_board_symbol(co1, '(4)').
+get_board_symbol(ca1, '(3)').
+get_board_symbol(sa1, '(2)').
+get_board_symbol(so1, '(1)').
 
 % Player 2
-getSymbol(g2, '[5]').
-getSymbol(co2, '[4]').
-getSymbol(ca2, '[3]').
-getSymbol(sa2, '[2]').
-getSymbol(so2, '[1]').
+get_board_symbol(g2, '[5]').
+get_board_symbol(co2, '[4]').
+get_board_symbol(ca2, '[3]').
+get_board_symbol(sa2, '[2]').
+get_board_symbol(so2, '[1]').
 
 % Empty space
-getSymbol(e, ' - ').
+get_board_symbol(e, ' - ').
 
 % ==========================================================================
 % ==========================================================================

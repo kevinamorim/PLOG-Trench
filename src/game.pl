@@ -1,33 +1,28 @@
 /* -*- Mode:Prolog; coding:iso-8859-1; -*- */
 
-% Used to initialize the game per se
 :- consult(logic).
 :- consult(io).
 
-playGame(_) :-
+% play_game().
+play_game(_) :-
         initialize(L),
-        printGameState(L),
-        firstPlayer(P), !,
-        playGame(L, P).
+        print_board(L),
+        first_player(P), !,
+        play_game(L, P).
              
-% play(GameList, Player).
-playGame(L, _) :-
+% play_game(GameList, Player).
+play_game(L, _) :-
         gameOver(L), !, fail.
         
-playGame(L, P) :-     
-        getPlayerMove(L, P, NL),
-        printGameState(NL),
-        nextPlayer(P, NP), !,
-        playGame(NL, NP).
-        
-% Player management
-firstPlayer(p1).
-nextPlayer(p1, p2).
-nextPlayer(p2, p1).
+play_game(L, P) :-     
+        read_player_move(L, P, NL),
+        print_board(NL),
+        next_player(P, NP), !,
+        play_game(NL, NP).
 
 % Player move
-% getPlayerMove(GameList, Player, NewGameList)
-getPlayerMove(L, Pl, NL) :-
+% read_player_move(GameList, Player, NewGameList)
+read_player_move(L, Pl, NL) :-
         write('Player: '), write(Pl), nl,
         write('Select Piece (xy): '),
         readPosition([A1,A2]),
@@ -35,11 +30,12 @@ getPlayerMove(L, Pl, NL) :-
         convertAlphaToNum(A2, C),
         getPiece(L, [R,C], P),
         checkPiecePlayer(P, Pl), !,
-        write('Piece selected: '), getSymbol(P, S), write(S), nl,
+        write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
         write('Select Target (xy): '),
         readPosition([B1,B2]),
         movePiece(L, [A1,A2], [B1,B2], NL), !;
-        getPlayerMove(L, Pl, NL).
+        %else : happens when the player inserts coordinates of a piece that it's not his
+        read_player_move(L, Pl, NL).
                     
 % ==============================
 %       Game Initialization
@@ -52,18 +48,10 @@ getPlayerMove(L, Pl, NL) :-
 % sa - sargeant 
 % so - soldier
 
-
 gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
          [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
          [e, e, e, so2, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
          [ca2, ca2, ca2], [co2, co2], [g2]]).
-
-/*
-gameList([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
-         [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, so1, e, e, e], [e, e, e, e, e, e, e, e],
-         [e, e, e, e, e, e, e], [e, e, e, e, e, e], [e, e, e, e, e], [e, e, e, e],
-         [e, e, e], [e, e], [g2]]).
-*/
 
 initialize(X) :- gameList(X).
 
@@ -87,9 +75,3 @@ playerHasPieces([_|_], []) :- fail.
 playerHasPieces(GameList, [P|R]) :-
         member_matrix(P,GameList);
         playerHasPieces(GameList, R).
-
-% Check player: verifies if any piece of the passed player exists... 
-
-
-
-printTest(_) :- initialize(X), printGameState(X).

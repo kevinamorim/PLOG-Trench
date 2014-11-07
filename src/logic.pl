@@ -26,8 +26,6 @@ movePiece(L, [X1, Y1], [X2, Y2], NL) :-
         canMove(L, [X1, Y1], [X2, Y2]), % Verifies if the move can be done
         setPiece(L, e, [R1, C1], L1),
         setPiece(L1, P, [R2, C2], NL).
-% ===========================================
-% ===========================================
 
 % ===========================================
 %       Pieces getter & setter
