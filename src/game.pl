@@ -32,11 +32,12 @@ getPlayerMove(L, Pl, NL) :-
         write('Player: '), write(Pl), nl,
         write('Select Piece (xy): '),
         readPosition([A1,A2]), !,
-        write('Select Target (xy): '),
-        readPosition([B1,B2]), !,
         convertAlphaToNum(A1, R),
         convertAlphaToNum(A2, C),
         getPiece(L, [R,C], P),
+        write('Piece selected: '), getSymbol(P, S), write(S), nl,
+        write('Select Target (xy): '),
+        readPosition([B1,B2]), !,
         canMove(L, P, [A1,A2], [B1,B2]), !,
         movePiece(L, [A1,A2], [B1,B2], NL).
                     
