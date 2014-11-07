@@ -156,22 +156,26 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 verify_traject(L, [R1, C1], [R2, C2]) :-
         get_direction(L, [R1, C1], [R2, C2], DIR),
         convert_alpha_num(R1, A1),
-        convert_alpha_num(R2, A2),
+        convert_alpha_num(C1, A2),
         get_piece(L, [A1, A2], PI),
         check_piece_player(PI, P),
         P == p1,
         DIR == f,
-        check_road_front_p1(L, [R1, R2], A2 - A1).
+        DELTA is (A2 - A1),
+        check_road_front_p1(L, [R1, C1], DELTA).
 
-check_road_front_p1(_, _, 0) :- !.
-check_road_front_p1(L, [X1, X2], T) :- 
-        convert_alpha_num(X1, A0), 
-        convert_alpha_num(X2, A2), 
-        A1 = A0 + T, 
-        get_piece(L, [A1, A2], PI), 
+check_road_front_p1(_, _, _, 0) :- !.
+check_road_front_p1(L, [R1, C1], T) :- 
+        convert_alpha_num(R1, X1), 
+        convert_alpha_num(C1, Y1), 
+        TX is X1 + T,
+        TY is Y1 + T,
+        get_piece(L, [TX, TY], PI), 
+        write(PI), nl,
         PI == e,
         Y is T - 1,
-        check_road_front_p1(L, [X1, X2], Y). 
+        check_road_front_p1(L, [R1, C1], Y). 
+
 /**
 verify_traject(L, [R1, C1], [R2, C2]) :-
         get_direction(L, [R1, C1], [R2, C2], DIR),
