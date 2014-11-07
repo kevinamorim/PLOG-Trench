@@ -80,25 +80,34 @@ calculateDistance(SRC, DST, D) :-
 % 'l' -> Left
 % 'r' -> Right
 % 'd' -> Diagonal
-getDirection([R1, C1], [R2, C2], D) :-
-        R1 == R2, C1 \== C2, D = d.
+getDirection(L, [R1, C1], [R2, C2], D) :-
+        R1 == R2, C1 \== C2, D = d; 
+        R1 \== R2, C1 == C2, D = d;
+        R1 \== R2, C1 \== C2, getPerpendicularDirection(L, [R1, C1], [R2, C2], D).
 
-getDirection([R1, C1], [R2, C2], D) :-
-        R1 \== R2, C1 == C2, D = d.
-
-getDirection([R1, C1], [R2, C2], D) :- 
-        R1 \== R2, C1 \== C2, getPerpendicularDirection([R1, C1], [R2, C2], D).
-
-getPerpendicularDirection([R1, C1], [R2, C2], D) :-
-        R1 < R2, C1 < C2, D = f.
-
-getPerpendicularDirection([R1, C1], [R2, C2], D) :-
-        R1 > R2, C1 > C2, D = b.
-
-getPerpendicularDirection([R1, C1], [R2, C2], D) :-
-        R1 > R2, C1 < C2, D = r.
-
-getPerpendicularDirection([R1, C1], [R2, C2], D) :-
+getPerpendicularDirection(L, [R1, C1], [R2, C2], D) :-
+        getPiece(L, [R1, C1], PI),
+        checkPiecePlayer(PI, P),
+        P == p1,
+        R1 < R2, C1 < C2, D = f;
+        
+        getPiece(L, [R1, C1], PI),
+        checkPiecePlayer(PI, P),
+        P == p2,
+        R1 < R2, C1 < C2, D = b;
+        
+        getPiece(L, [R1, C1], PI),
+        checkPiecePlayer(PI, P),
+        P == p1,
+        R1 > R2, C1 > C2, D = b;
+        
+        getPiece(L, [R1, C1], PI),
+        checkPiecePlayer(PI, P),
+        P == p2,
+        R1 > R2, C1 > C2, D = f;
+        
+        R1 > R2, C1 < C2, D = r;
+         
         R1 < R2, C1 > C2, D = l. 
 
 % ===============================
