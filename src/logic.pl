@@ -51,7 +51,7 @@ setPiece(L, P, [R, C], NL) :-
 % ===========================================
 % Predicate that checks if a given piece can move from a pos to another.
 
-% canMove(GameList, Piece, [From], [To])
+% canMove(GameList, [From], [To])
 canMove(L, [R1, C1], [R2, C2]) :- 
         getPiece(L, [R1, C1], PI),
         getDistance([R1, C1], [R2, C2], DIST),

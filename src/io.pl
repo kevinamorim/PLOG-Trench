@@ -1,7 +1,6 @@
 /* -*- Mode:Prolog; coding:iso-8859-1; -*- */
 
-% Input / Output file
-
+% Input / Output
 readPosition([A,B]) :-
         get_char(A),
         get_char(B),
