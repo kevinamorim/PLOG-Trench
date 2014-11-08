@@ -154,30 +154,129 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 
 
 verify_traject(L, [R1, C1], [R2, C2]) :-
+        % In case the movement if to the front
         get_direction(L, [R1, C1], [R2, C2], DIR),
+        write('Direction: '), write(DIR), nl, 
+        % Convert all coordinates to numeric
         convert_alpha_num(R1, A1),
         convert_alpha_num(C1, A2),
+        convert_alpha_num(R2, B1),
+        %convert_alpha_num(C2, B2),
         get_piece(L, [A1, A2], PI),
+        write('Piece: '), write(PI), nl,
         check_piece_player(PI, P),
+        write('Player: '), write(P), nl,
         P == p1,
         DIR == f,
-        DELTA is (A2 - A1),
-        check_road_front_p1(L, [R1, C1], DELTA).
+        DELTA is (B1 - A1),
+        write('Delta: '), write(DELTA), nl,
+        check_road_front_p1(L, [R1, C1], DELTA);
+        
+        % In case the movement if to the back
+        get_direction(L, [R1, C1], [R2, C2], DIR),
+        write('Direction: '), write(DIR), nl, 
+        % Convert all coordinates to numeric
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(C1, A2),
+        convert_alpha_num(R2, B1),
+        %convert_alpha_num(C2, B2),
+        get_piece(L, [A1, A2], PI),
+        write('Piece: '), write(PI), nl,
+        check_piece_player(PI, P),
+        write('Player: '), write(P), nl,
+        P == p1,
+        DIR == b,
+        DELTA is (A1 - B1),
+        write('Delta: '), write(DELTA), nl,
+        check_road_back_p1(L, [R1, C1], DELTA);
 
-check_road_front_p1(_, _, _, 0) :- !.
+        % In case the movement if to the right
+        get_direction(L, [R1, C1], [R2, C2], DIR),
+        write('Direction: '), write(DIR), nl, 
+        % Convert all coordinates to numeric
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(C1, A2),
+        %convert_alpha_num(R2, B1),
+        convert_alpha_num(C2, B2),
+        get_piece(L, [A1, A2], PI),
+        write('Piece: '), write(PI), nl,
+        check_piece_player(PI, P),
+        write('Player: '), write(P), nl,
+        P == p1,
+        DIR == r,
+        DELTA is (B2 - A2),
+        write('Delta: '), write(DELTA), nl,
+        check_road_back_p1(L, [R1, C1], DELTA);
+        
+        % In case the movement if to the left
+        get_direction(L, [R1, C1], [R2, C2], DIR),
+        write('Direction: '), write(DIR), nl, 
+        % Convert all coordinates to numeric
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(C1, A2),
+        %convert_alpha_num(R2, B1),
+        convert_alpha_num(C2, B2),
+        get_piece(L, [A1, A2], PI),
+        write('Piece: '), write(PI), nl,
+        check_piece_player(PI, P),
+        write('Player: '), write(P), nl,
+        P == p1,
+        DIR == l,
+        DELTA is (A2 - B2),
+        write('Delta: '), write(DELTA), nl,
+        check_road_back_p1(L, [R1, C1], DELTA).
+
+check_road_front_p1(_, _, 0) :- !.
 check_road_front_p1(L, [R1, C1], T) :- 
         convert_alpha_num(R1, X1), 
         convert_alpha_num(C1, Y1), 
         TX is X1 + T,
         TY is Y1 + T,
-        get_piece(L, [TX, TY], PI), 
-        write(PI), nl,
+        get_piece(L, [TX, TY], PI),
+        write('Found: '), write(PI), nl, 
         PI == e,
         Y is T - 1,
-        check_road_front_p1(L, [R1, C1], Y). 
+        write('T is: '), write(Y), nl,
+        check_road_front_p1(L, [TX, TY], Y). 
 
-/**
-verify_traject(L, [R1, C1], [R2, C2]) :-
-        get_direction(L, [R1, C1], [R2, C2], DIR),
-        write(DIR).*/
+check_road_back_p1(_, _, 0) :- !.
+check_road_back_p1(L, [R1, C1], T) :-
+        convert_alpha_num(R1, X1), 
+        convert_alpha_num(C1, Y1), 
+        TX is X1 - T,
+        TY is Y1 - T,
+        get_piece(L, [TX, TY], PI),
+        write('Found: '), write(PI), nl, 
+        PI == e,
+        Y is T - 1,
+        write('T is: '), write(Y), nl,
+        check_road_back_p1(L, [TX, TY], Y). 
+
+check_road_right_p1(_,_,0) :- !.
+check_road_right_p1(L, [R1, C1], T) :-
+        convert_alpha_num(R1, X1), 
+        convert_alpha_num(C1, Y1), 
+        TX is X1 - T,
+        TY is Y1 + T,
+        get_piece(L, [TX, TY], PI),
+        write('Found: '), write(PI), nl, 
+        PI == e,
+        Y is T - 1,
+        write('T is: '), write(Y), nl,
+        check_road_right_p1(L, [TX, TY], Y). 
+
+check_road_left_p1(_,_,0) :- !.
+check_road_left_p1(L, [R1, C1], T) :-
+        convert_alpha_num(R1, X1), 
+        convert_alpha_num(C1, Y1), 
+        TX is X1 + T,
+        TY is Y1 - T,
+        get_piece(L, [TX, TY], PI),
+        write('Found: '), write(PI), nl, 
+        PI == e,
+        Y is T - 1,
+        write('T is: '), write(Y), nl,
+        check_road_left_p1(L, [TX, TY], Y). 
+
+
 
