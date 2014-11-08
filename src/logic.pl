@@ -52,11 +52,17 @@ set_piece(L, P, [R, C], NL) :-
 
 % canMove(GameList, [From], [To])
 can_move(L, [R1, C1], [R2, C2]) :- 
-        get_piece(L, [R1, C1], PI),
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(C1, A2),
+        get_piece(L, [A1, A2], PI),
+        %write('Piece: '), write(PI), nl,
         get_distance([R1, C1], [R2, C2], DIST),
+        %write('Distance: '), write(DIST), nl,
         max_distance_for(PI, MAX),
+        %write('Max: '), write(MAX), nl,
         DIST < (MAX + 1),       % Distance verification
         get_direction(L, [R1, C1], [R2, C2], DIR),
+        %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR).
 
 % ===========================================
