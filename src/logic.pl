@@ -153,12 +153,41 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 
 % ===========================================
 % ===========================================
+% ===========================================
+% VERIFICATION OF TRAJECTS
+% ===========================================
+% Position in alpha
+% check_road_vertical([posSrc], [posDest], dir(n/s))
+% Base case
+% Works for north and south movements... 
+% -> Tested
+check_road_vertical(_, [R1, C1], [R2, C2], _) :-
+        R1 == R2, C1 == C2. 
+
+check_road_vertical(L, [R1, C1], [R2, C2], DIR) :-
+        R1 \= R2, C1 \= C2, % The src and dest cant be equal
+        get_next_letter(R1, TR, DIR),
+        get_next_letter(C1, TC, DIR),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_vertical(L, [TR, TC], [R2, C2], DIR).   
+% ===========================================
+% ===========================================
+
+
+%  |
+%  |
+%  |
+%  |
+% \/
 
 % ??????????????????????????????
 % ||||||||||Sandbox|||||||||||||
 % ??????????????????????????????
 
-
+% Place where nothing is to be used :D
 verify_traject(L, [R1, C1], [R2, C2]) :-
         
         % In case the movement if to the front
@@ -250,8 +279,10 @@ verify_traject(L, [R1, C1], [R2, C2]) :-
         DELTA is (A2 - B2),
         write('Delta: '), write(DELTA), nl,
         check_road_back_p1(L, [R1, C1], DELTA).
+      
+        
 
-check_road_front_p1(_, _, 0) :- !.
+check_road_front_p1(_, _, 0).
 check_road_front_p1(L, [R1, C1], T) :- 
         convert_alpha_num(R1, X1), 
         convert_alpha_num(C1, Y1), 
