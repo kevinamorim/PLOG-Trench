@@ -323,6 +323,15 @@ gameList( [ [e],
 
 A representação do jogo na consola, em Prolog, está implementada da seguinte forma:
 
+\begin{itemize}
+  \item{\textbf{print\_board\_line:} imprime uma linha da matriz de jogo;}
+  \item{\textbf{print\_board\_trench:} imprime a linha de trincheira (esta tem uma representção singular);}
+  \item{\textbf{print\_board\_header:} imprime as duas coordenadas de topo;}
+  \item{\textbf{print\_board\_footer:} imprime as duas coordenadas de fundo;}
+\end{itemize}
+
+\vspace{1cm}
+
 \begin{lstlisting}
 print_board([], _).
 
@@ -378,10 +387,10 @@ print_board_trench([H]) :-
                      write(S).
 
 print_board_trench([H|T]) :-
-                     get_board_symbol(H, S),
-                     write(S),
-                     format('~c', [215]),
-                     print_board_trench(T).
+        get_board_symbol(H, S),
+        write(S),
+        format('~c', [215]), <-- caracter q simboliza a trincheira
+        print_board_trench(T).
 
 print_board_header(_) :-
         print_spaces(16),
@@ -396,6 +405,10 @@ print_board_footer(_) :-
         write('h'), nl.
 
 \end{lstlisting}
+
+\vspace{1cm}
+
+\subsection{Visualização do Tabuleiro (output no Eclipse)}
 
 \begin{figure}[h!]
 \begin{center}
@@ -454,6 +467,15 @@ can_move(L, [R1, C1], [R2, C2]) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Caso de fim do Jogo}
 
+O jogo acaba nos seguintes cenários (não exatamente os do jogo original, mas apenas parte):
+
+\begin{itemize}
+  \item{\textbf{O jogador 1 já não tem peças em campo -} jogador 2 ganha;}
+  \item {\textbf{O jogador 2 já não tem peças em campo -} jogador 1 ganha;}
+  \item{\textbf{O jogador 1 já não tem movimentos válidos -} jogador 2 ganha;}
+  \item{\textbf{O jogador 2 já não tem movimentos válidos -} jogador 1 ganha;}
+\end{itemize}
+
 \begin{lstlisting}
 
 game_over(GameList) :-
@@ -510,7 +532,7 @@ player_has_moves(GameList, Player, X, Y) :-
 // checks if a piece has a valid movement to it
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
         A1 < 9, A2 < 9,
-        get_piece(GameList, [X,Y], P),
+        %get_piece(GameList, [X,Y], P),
         can_move(GameList, [X,Y], [A1,A2]).
 
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
@@ -524,5 +546,42 @@ piece_has_moves(GameList, [X,Y], [A1,A2]) :-
 
 \end{lstlisting}
 
+\newpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Interface com o Utilizador}
+
+A interacao com o utilizador é relativamente simples.
+
+Para selecionar uma peça, o utilizador precisa de inserir duas coordenadas
+(a interface fornece as coordenadas quando imprime o tabuleiro).
+
+Para selecionar o destino da peca selecionada, o utilizador precisa de inserir as coordenadas de destino.
+
+Obs.: A insercao de coordenadas é feita da seguinte forma: xy+ENTER, onde xy sao as duas coordenadas (em minuscula)
+e ENTER a tecla homónima do teclado.
+
+%\newpage
+\vspace{1cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusões}
+
+TODO
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bibliografia}
+
+\vspace{1cm}
+
+\begin{itemize}
+  \item{\textbf{Replace method:} http://stackoverflow.com/questions/5850937/prolog-element-in-lists-replacement}
+  \item{\textbf{List manipulation:} http://www.swi-prolog.org/pldoc/doc/swi/library/lists.pl}
+  \item{\textbf{Moodle FEUP:} https://moodle.up.pt/course/view.php?id=2866}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

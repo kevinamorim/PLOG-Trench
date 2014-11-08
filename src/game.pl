@@ -109,10 +109,10 @@ player_has_moves(GameList, Player, X, Y) :-
 % checks if a piece has a valid movement to it
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
         A1 < 9, A2 < 9,
-        get_piece(GameList, [X,Y], P),
-        write('> Testing move of: '), write(P), write(' from '), write([X,Y]), write(' to '), write([A1,A2]), nl,
-        can_move(GameList, [X,Y], [A1,A2]),
-        write('> can move: '), write(P), nl.
+        %get_piece(GameList, [X,Y], P),
+        %write('> Testing move of: '), write(P), write(' from '), write([X,Y]), write(' to '), write([A1,A2]), nl,
+        can_move(GameList, [X,Y], [A1,A2]).
+        %write('> can move: '), write(P), nl.
 
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
         A1 < 9, !,

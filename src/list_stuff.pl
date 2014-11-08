@@ -1,7 +1,6 @@
 % Lists library module
 :- use_module(library(lists)).
 
-
 % Testing replacement, will be used for moving pieces.
 % select(element to replace, list, element that will replace, resulting list)
 
