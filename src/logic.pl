@@ -156,11 +156,14 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 % ===========================================
 % VERIFICATION OF TRAJECTS
 % ===========================================
-% Position in alpha
+% -----> Positions in alpha
+
 % check_road_vertical([posSrc], [posDest], dir(n/s))
+% example: check_road_vertical([a, i], [p, h], s)
 % Base case
 % Works for north and south movements... 
 % -> Tested
+% Base
 check_road_vertical(_, [R1, C1], [R2, C2], _) :-
         R1 == R2, C1 == C2. 
 
@@ -173,6 +176,37 @@ check_road_vertical(L, [R1, C1], [R2, C2], DIR) :-
         get_piece(L, [X, Y], PI),
         PI == e,
         check_road_vertical(L, [TR, TC], [R2, C2], DIR).   
+
+% check_road_horizontal([posSrc], [posDest], dir(e/w)
+% -> Tested: more testing is needed.
+% Base
+check_road_horizontal(_, [R1, C1], [R2, C2], _) :- 
+        R1 == R2, C1 == C2.
+
+check_road_horizontal(L, [R1, C1], [R2, C2], DIR) :-
+        % moving to the right
+        R1 \= R2, C1 \= C2, 
+        DIR == e, 
+        get_next_letter(R1, TR, n),
+        get_next_letter(C1, TC, s),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_horizontal(L, [TR, TC], [R2, C2], DIR);
+        
+        % moving to the left
+        R1 \= R2, C1 \= C2, 
+        DIR == w,
+        get_next_letter(R1, TR, s),
+        get_next_letter(C1, TC, n),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_horizontal(L, [TR, TC], [R2, C2], DIR).
+
+
 % ===========================================
 % ===========================================
 
@@ -183,6 +217,7 @@ check_road_vertical(L, [R1, C1], [R2, C2], DIR) :-
 %  |
 % \/
 
+% Place to test stuff
 % ??????????????????????????????
 % ||||||||||Sandbox|||||||||||||
 % ??????????????????????????????
