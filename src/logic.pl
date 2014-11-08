@@ -160,6 +160,7 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 
 
 verify_traject(L, [R1, C1], [R2, C2]) :-
+        
         % In case the movement if to the front
         get_direction(L, [R1, C1], [R2, C2], DIR),
         write('Direction: '), write(DIR), nl, 
@@ -230,6 +231,24 @@ verify_traject(L, [R1, C1], [R2, C2]) :-
         DIR == l,
         DELTA is (A2 - B2),
         write('Delta: '), write(DELTA), nl,
+        check_road_back_p1(L, [R1, C1], DELTA);
+
+        % In case the movement is diagonal 
+        get_direction(L, [R1, C1], [R2, C2], DIR),
+        write('Direction: '), write(DIR), nl, 
+        % Convert all coordinates to numeric
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(C1, A2),
+        convert_alpha_num(R2, B1),
+        convert_alpha_num(C2, B2),
+        get_piece(L, [A1, A2], PI),
+        write('Piece: '), write(PI), nl,
+        check_piece_player(PI, P),
+        write('Player: '), write(P), nl,
+        P == p1,
+        DIR == l,
+        DELTA is (A2 - B2),
+        write('Delta: '), write(DELTA), nl,
         check_road_back_p1(L, [R1, C1], DELTA).
 
 check_road_front_p1(_, _, 0) :- !.
@@ -285,4 +304,34 @@ check_road_left_p1(L, [R1, C1], T) :-
         check_road_left_p1(L, [TX, TY], Y). 
 
 
-
+check_road_diagonal_p1(L, [R1, C1], [R2, C2]) :-
+        % In a diagonal movement only one coordinates change, we must check wich one:
+        % And the movement can also be frontwards or backwards
+        R1 == R2,
+        C2 > C1,
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(R2, A2),
+        Y is (A2 + 1),
+        get_piece(L, [A1, Y], PI),
+        PI == e,
+        !;
+        
+        R1 == R2,
+        C2 < C1,
+        T is (C1 - C2),
+        !;
+        
+        C1 == C2,
+        R2 > R1,
+        T is (R2 - R1),
+        !;
+        
+        C1 == C2,
+        R2 < R1,
+        T is (R1 - R2),
+        !;
+        
+        % Final case
+        R1 == R2,
+        C1 == C2,
+        !.
