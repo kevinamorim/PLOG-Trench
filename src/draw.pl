@@ -73,8 +73,17 @@ print_board_trench([H|T]) :-
                      print_board_trench(T).
 
 
-print_board_header(_) :- print_spaces(16), write('a'), print_spaces(3), write('i'), nl.
-print_board_footer(_) :- print_spaces(16), write('p'), print_spaces(3), write('h'), nl.
+print_board_header(_) :-
+        print_spaces(16),
+        write('a'),
+        print_spaces(3),
+        write('i'), nl.
+
+print_board_footer(_) :-
+        print_spaces(16),
+        write('p'),
+        print_spaces(3),
+        write('h'), nl.
 
 
 % ==========================================================================
