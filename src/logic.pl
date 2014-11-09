@@ -52,11 +52,20 @@ set_piece(L, P, [R, C], NL) :-
 
 % canMove(GameList, [From], [To])
 can_move(L, [R1, C1], [R2, C2]) :- 
-        get_piece(L, [R1, C1], PI),
+        %write('can move: '), write(R1), write(C1), write(R2), write(C2), nl,
+        R1 == R2, C1 == C2;
+        
+        convert_alpha_num(R1, A1),
+        convert_alpha_num(C1, A2),
+        get_piece(L, [A1, A2], PI),
+        %write('Piece: '), write(PI), nl,
         get_distance([R1, C1], [R2, C2], DIST),
+        %write('Distance: '), write(DIST), nl,
         max_distance_for(PI, MAX),
+        %write('Max: '), write(MAX), nl,
         DIST < (MAX + 1),       % Distance verification
         get_direction(L, [R1, C1], [R2, C2], DIR),
+        %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR).
 
 % ===========================================
@@ -147,136 +156,159 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 
 % ===========================================
 % ===========================================
+% ===========================================
+% VERIFICATION OF TRAJECTS
+% ===========================================
+% -----> Positions in alpha
 
-% ??????????????????????????????
-% ||||||||||Sandbox|||||||||||||
-% ??????????????????????????????
-
-
-verify_traject(L, [R1, C1], [R2, C2]) :-
-        % In case the movement if to the front
-        get_direction(L, [R1, C1], [R2, C2], DIR),
-        write('Direction: '), write(DIR), nl, 
-        % Convert all coordinates to numeric
-        convert_alpha_num(R1, A1),
-        convert_alpha_num(C1, A2),
-        convert_alpha_num(R2, B1),
-        %convert_alpha_num(C2, B2),
-        get_piece(L, [A1, A2], PI),
-        write('Piece: '), write(PI), nl,
-        check_piece_player(PI, P),
-        write('Player: '), write(P), nl,
-        P == p1,
-        DIR == f,
-        DELTA is (B1 - A1),
-        write('Delta: '), write(DELTA), nl,
-        check_road_front_p1(L, [R1, C1], DELTA);
+check_road(L, [R1, C1], [R2, C2]) :-
+        R1 == R2,
+        C1 \= C2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 > X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], nw);
         
-        % In case the movement if to the back
-        get_direction(L, [R1, C1], [R2, C2], DIR),
-        write('Direction: '), write(DIR), nl, 
-        % Convert all coordinates to numeric
-        convert_alpha_num(R1, A1),
-        convert_alpha_num(C1, A2),
-        convert_alpha_num(R2, B1),
-        %convert_alpha_num(C2, B2),
-        get_piece(L, [A1, A2], PI),
-        write('Piece: '), write(PI), nl,
-        check_piece_player(PI, P),
-        write('Player: '), write(P), nl,
-        P == p1,
-        DIR == b,
-        DELTA is (A1 - B1),
-        write('Delta: '), write(DELTA), nl,
-        check_road_back_p1(L, [R1, C1], DELTA);
-
-        % In case the movement if to the right
-        get_direction(L, [R1, C1], [R2, C2], DIR),
-        write('Direction: '), write(DIR), nl, 
-        % Convert all coordinates to numeric
-        convert_alpha_num(R1, A1),
-        convert_alpha_num(C1, A2),
-        %convert_alpha_num(R2, B1),
-        convert_alpha_num(C2, B2),
-        get_piece(L, [A1, A2], PI),
-        write('Piece: '), write(PI), nl,
-        check_piece_player(PI, P),
-        write('Player: '), write(P), nl,
-        P == p1,
-        DIR == r,
-        DELTA is (B2 - A2),
-        write('Delta: '), write(DELTA), nl,
-        check_road_back_p1(L, [R1, C1], DELTA);
+        R1 == R2,
+        C1 \= C2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 < X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], se);
         
-        % In case the movement if to the left
-        get_direction(L, [R1, C1], [R2, C2], DIR),
-        write('Direction: '), write(DIR), nl, 
-        % Convert all coordinates to numeric
-        convert_alpha_num(R1, A1),
-        convert_alpha_num(C1, A2),
-        %convert_alpha_num(R2, B1),
-        convert_alpha_num(C2, B2),
-        get_piece(L, [A1, A2], PI),
-        write('Piece: '), write(PI), nl,
-        check_piece_player(PI, P),
-        write('Player: '), write(P), nl,
-        P == p1,
-        DIR == l,
-        DELTA is (A2 - B2),
-        write('Delta: '), write(DELTA), nl,
-        check_road_back_p1(L, [R1, C1], DELTA).
+        C1 == C2,
+        R1 \= R2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 > X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], ne);
+        
+        C1 == C2,
+        R1 \= R2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 < X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], sw);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 < X2, Y1 < Y2, 
+        check_road_vertical(L, [R1, C1], [R2, C2], s);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 > X2, Y1 > Y2, 
+        check_road_vertical(L, [R1, C1], [R2, C2], s);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 > X2, Y1 < Y2,
+        check_road_horizontal(L, [R1, C1], [R2, C2], e);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 < X2, Y1 > Y2,
+        check_road_horizontal(L, [R1, C1], [R2, C2], w);
+        
+        R1 == R2, C1 == C2.
 
-check_road_front_p1(_, _, 0) :- !.
-check_road_front_p1(L, [R1, C1], T) :- 
-        convert_alpha_num(R1, X1), 
-        convert_alpha_num(C1, Y1), 
-        TX is X1 + T,
-        TY is Y1 + T,
-        get_piece(L, [TX, TY], PI),
-        write('Found: '), write(PI), nl, 
+% check_road_vertical([posSrc], [posDest], dir(n/s))
+% example: check_road_vertical([a, i], [p, h], s)
+% Base case
+% Works for north and south movements... 
+% -> Tested
+% Base
+check_road_vertical(_, [R1, C1], [R2, C2], _) :-
+        R1 == R2, C1 == C2. 
+
+check_road_vertical(L, [R1, C1], [R2, C2], DIR) :-
+        R1 \= R2, C1 \= C2, % The src and dest cant be equal
+        get_next_letter(R1, TR, DIR),
+        get_next_letter(C1, TC, DIR),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
         PI == e,
-        Y is T - 1,
-        write('T is: '), write(Y), nl,
-        check_road_front_p1(L, [TX, TY], Y). 
+        check_road_vertical(L, [TR, TC], [R2, C2], DIR).   
 
-check_road_back_p1(_, _, 0) :- !.
-check_road_back_p1(L, [R1, C1], T) :-
-        convert_alpha_num(R1, X1), 
-        convert_alpha_num(C1, Y1), 
-        TX is X1 - T,
-        TY is Y1 - T,
-        get_piece(L, [TX, TY], PI),
-        write('Found: '), write(PI), nl, 
+% check_road_horizontal([posSrc], [posDest], dir(e/w))
+% -> Tested: more testing is needed.
+% Base
+check_road_horizontal(_, [R1, C1], [R2, C2], _) :- 
+        R1 == R2, C1 == C2.
+
+check_road_horizontal(L, [R1, C1], [R2, C2], DIR) :-
+        % moving to the right
+        R1 \= R2, C1 \= C2, 
+        DIR == e, 
+        get_next_letter(R1, TR, n),
+        get_next_letter(C1, TC, s),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
         PI == e,
-        Y is T - 1,
-        write('T is: '), write(Y), nl,
-        check_road_back_p1(L, [TX, TY], Y). 
-
-check_road_right_p1(_,_,0) :- !.
-check_road_right_p1(L, [R1, C1], T) :-
-        convert_alpha_num(R1, X1), 
-        convert_alpha_num(C1, Y1), 
-        TX is X1 - T,
-        TY is Y1 + T,
-        get_piece(L, [TX, TY], PI),
-        write('Found: '), write(PI), nl, 
+        check_road_horizontal(L, [TR, TC], [R2, C2], DIR);
+        
+        % moving to the left
+        R1 \= R2, C1 \= C2, 
+        DIR == w,
+        get_next_letter(R1, TR, s),
+        get_next_letter(C1, TC, n),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
         PI == e,
-        Y is T - 1,
-        write('T is: '), write(Y), nl,
-        check_road_right_p1(L, [TX, TY], Y). 
+        check_road_horizontal(L, [TR, TC], [R2, C2], DIR).
 
-check_road_left_p1(_,_,0) :- !.
-check_road_left_p1(L, [R1, C1], T) :-
-        convert_alpha_num(R1, X1), 
-        convert_alpha_num(C1, Y1), 
-        TX is X1 + T,
-        TY is Y1 - T,
-        get_piece(L, [TX, TY], PI),
-        write('Found: '), write(PI), nl, 
+% check_road_diagonal([posSrc], [posDest], dir(nw, ne, sw, se))
+% -> Tested: but needs more
+check_road_diagonal(_, [R1, C1], [R2, C2], _) :- 
+        R1 == R2, C1 == C2.
+
+check_road_diagonal(L, [R1, C1], [R2, C2], DIR) :-
+        % northeast
+        DIR == ne,
+        R1 \= R2,
+        get_next_letter(R1, TR, n),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(C1, Y),
+        get_piece(L, [X, Y], PI),
         PI == e,
-        Y is T - 1,
-        write('T is: '), write(Y), nl,
-        check_road_left_p1(L, [TX, TY], Y). 
+        check_road_diagonal(L, [TR, C1], [R2, C2], DIR);
 
+        % northwest
+        DIR == nw,
+        C1 \= C2,
+        get_next_letter(C1, TC, n),
+        convert_alpha_num(R1, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [R1, TC], [R2, C2], DIR);
 
+        % southeast
+        DIR == se,
+        C1 \= C2,
+        get_next_letter(C1, TC, s),
+        convert_alpha_num(R1, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [R1, TC], [R2, C2], DIR);
+        
+        % southwest
+        DIR == sw,
+        R1 \= R2,
+        get_next_letter(R1, TR, s),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(C1, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [TR, C1], [R2, C2], DIR).
 
+% ===========================================
+% ===========================================
