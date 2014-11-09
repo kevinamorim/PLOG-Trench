@@ -105,13 +105,15 @@ player_has_pieces(GameList, [P|R]) :-
 % checks if the player has any pieces width a valid move
 % ==============================================
 
-next_piece(GameList, Player, [X, Y], PI) :-
+% Gets the next piece for a Player, [X, Y] -> ALPHA MODE
+next_piece(GameList, Player, [X, Y], [FX, FY]) :-
         
         convert_alpha_num(Y, Y1),
         Y1 < 9, Y \= p,
                 get_next_letter(Y, N, s),
                 convert_alpha_num(X, X2),
                 convert_alpha_num(N, Y2),
+                FX is X, FY is N,
                 get_piece(GameList, [X2, Y2], PI),
                 check_piece_player(PI, Player);
         
@@ -120,20 +122,44 @@ next_piece(GameList, Player, [X, Y], PI) :-
                 get_next_letter(X, N, s),
                 convert_alpha_num(N, X2),
                 convert_alpha_num(Y, Y2),
+                FX is N, FY is Y,
                 get_piece(GameList, [X2, Y2], PI),
                 check_piece_player(PI, Player);
 
         convert_alpha_num(Y, Y1),
         Y1 < 9, Y \= p,
                 get_next_letter(Y, N, s),
-                next_piece(GameList, Player, [X, N], PI);
+                next_piece(GameList, Player, [X, N], [FX, FY]);
         
         convert_alpha_num(X, X1),
         X1 < 9, X \= p,
                 get_next_letter(X, N, s),
-                next_piece(GameList, Player, [N, Y], PI).
+                next_piece(GameList, Player, [N, Y], [FX, FY]).
+
+
+piece_has_move(GameList, [PX, PY], [X, Y]) :-
         
+        convert_alpha_num(Y, Y1),
+        Y1 < 9, Y \= p,
+                get_next_letter(Y, N, s),
+                can_move(GameList, [PX, PY], [X, N]);
         
+        convert_alpha_num(X, X1),
+        X1 < 9, X \= p,
+                get_next_letter(X, N, s),
+                can_move(GameList, [PX, PY], [N, Y]);
+        
+        convert_alpha_num(Y, Y1),
+        Y1 < 9, Y \= p,
+                get_next_letter(Y, N, s),
+                piece_has_moves(GameList, [PX, PY], [X, N]);
+        
+        convert_alpha_num(X, X1),
+        X1 < 9, X \= p,
+                get_next_letter(X, N, s),
+                piece_has_moves(GameList, [PX, PY], [N, Y]).
+
+   
 % pass alpha everywhere
 % player_has_moves(gamelist, player, initX, initY)
 player_has_moves(GameList, Player, X, Y) :-
