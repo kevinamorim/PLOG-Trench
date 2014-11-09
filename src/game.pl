@@ -71,10 +71,10 @@ game_over(GameList) :-
         \+ player_has_pieces(GameList, p2),
                 write('Player 2 has no pieces left.'), nl,
                 write('Player 1 wins'), !, nl;
-        \+ player_has_moves(GameList, p1, 1, 1),
+        \+ player_has_moves(GameList, p1, a, i),
                 write('Player 1 has no moves left.'), nl,
                 write('Player 2 wins'), !, nl;
-        \+ player_has_moves(GameList, p2, 1, 1),
+        \+ player_has_moves(GameList, p2, a, i),
                 write('Player 2 has no moves left.'), nl,
                 write('Player 1 wins'), !, nl.
 
@@ -91,31 +91,40 @@ player_has_pieces(GameList, [P|R]) :-
 
 % checks if the player has any pieces width a valid move
 player_has_moves(GameList, Player, X, Y) :-
-        X < 9, Y < 9,
-        get_piece(GameList, [X,Y], P),
+        convert_alpha_num(X, X1),
+        convert_alpha_num(Y, Y1),
+        X1 < 9, Y1 < 9,
+        get_piece(GameList, [X1,Y1], P),
         check_piece_player(P, Player),
-        piece_has_moves(GameList, [X,Y], [1,1]).
+        piece_has_moves(GameList, [X,Y], [a,i]).
 
 player_has_moves(GameList, Player, X, Y) :-
-        X < 9, !,
-                X1 is X + 1,
-                player_has_moves(GameList, Player, X1, Y);
-        Y < 9, !,
-                Y1 is Y + 1,
-                player_has_moves(GameList, Player, 1, Y1);
+        convert_alpha_num(X, X1),
+        convert_alpha_num(Y, Y1),
+        X1 < 9, !,
+                X2 is X1 + 1,
+                player_has_moves(GameList, Player, X2, Y1);
+        convert_alpha_num(Y, Y1),
+        Y1 < 9, !,
+                Y2 is Y1 + 1,
+                player_has_moves(GameList, Player, 1, Y2);
         fail.
 
 % checks if a piece has a valid movement to it
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
-        A1 < 9, A2 < 9,
+        convert_alpha_num(A1, A3),
+        convert_alpha_num(A2, A4),
+        A3 < 9, A4 < 9,
         can_move(GameList, [X,Y], [A1,A2]).
 
 piece_has_moves(GameList, [X,Y], [A1,A2]) :-
-        A1 < 9, !,
-                B1 is A1 + 1,
+        convert_alpha_num(A1, A3),
+        A3 < 9, !,
+                B1 is A3 + 1,
                 piece_has_moves(GameList, [X,Y], [B1,A2]);
-        A2 < 9, !,
-                B2 is A2 + 1,
+        convert_alpha_num(A2, A4),
+        A4 < 9, !,
+                B2 is A4 + 1,
                 piece_has_moves(GameList, [X,Y], [1,B2]);
         fail.
 
