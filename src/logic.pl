@@ -158,6 +158,61 @@ get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-
 % ===========================================
 % -----> Positions in alpha
 
+check_road(L, [R1, C1], [R2, C2]) :-
+        R1 == R2,
+        C1 \= C2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 > X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], nw);
+        
+        R1 == R2,
+        C1 \= C2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 < X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], se);
+        
+        C1 == C2,
+        R1 \= R2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 > X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], ne);
+        
+        C1 == C2,
+        R1 \= R2,
+        convert_to_grid_pos(R1, C1, X1, _),
+        convert_to_grid_pos(R2, C2, X2, _),
+        X1 < X2,
+        check_road_diagonal(L, [R1, C1], [R2, C2], sw);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 < X2, Y1 < Y2, 
+        check_road_vertical(L, [R1, C1], [R2, C2], s);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 > X2, Y1 > Y2, 
+        check_road_vertical(L, [R1, C1], [R2, C2], s);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 > X2, Y1 < Y2,
+        check_road_horizontal(L, [R1, C1], [R2, C2], e);
+        
+        R1 \= R2,
+        C1 \= C2,
+        char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
+        X1 < X2, Y1 > Y2,
+        check_road_horizontal(L, [R1, C1], [R2, C2], w);
+        
+        R1 == R2, C1 == C2.
+
 % check_road_vertical([posSrc], [posDest], dir(n/s))
 % example: check_road_vertical([a, i], [p, h], s)
 % Base case
@@ -177,7 +232,7 @@ check_road_vertical(L, [R1, C1], [R2, C2], DIR) :-
         PI == e,
         check_road_vertical(L, [TR, TC], [R2, C2], DIR).   
 
-% check_road_horizontal([posSrc], [posDest], dir(e/w)
+% check_road_horizontal([posSrc], [posDest], dir(e/w))
 % -> Tested: more testing is needed.
 % Base
 check_road_horizontal(_, [R1, C1], [R2, C2], _) :- 
@@ -206,6 +261,51 @@ check_road_horizontal(L, [R1, C1], [R2, C2], DIR) :-
         PI == e,
         check_road_horizontal(L, [TR, TC], [R2, C2], DIR).
 
+% check_road_diagonal([posSrc], [posDest], dir(nw, ne, sw, se))
+% -> Tested: but needs more
+check_road_diagonal(_, [R1, C1], [R2, C2], _) :- 
+        R1 == R2, C1 == C2.
+
+check_road_diagonal(L, [R1, C1], [R2, C2], DIR) :-
+        % northeast
+        DIR == ne,
+        R1 \= R2,
+        get_next_letter(R1, TR, n),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(C1, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [TR, C1], [R2, C2], DIR);
+
+        % northwest
+        DIR == nw,
+        C1 \= C2,
+        get_next_letter(C1, TC, n),
+        convert_alpha_num(R1, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [R1, TC], [R2, C2], DIR);
+
+        % southeast
+        DIR == se,
+        C1 \= C2,
+        get_next_letter(C1, TC, s),
+        convert_alpha_num(R1, X),
+        convert_alpha_num(TC, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [R1, TC], [R2, C2], DIR);
+        
+        % southwest
+        DIR == sw,
+        R1 \= R2,
+        get_next_letter(R1, TR, s),
+        convert_alpha_num(TR, X),
+        convert_alpha_num(C1, Y),
+        get_piece(L, [X, Y], PI),
+        PI == e,
+        check_road_diagonal(L, [TR, C1], [R2, C2], DIR).
 
 % ===========================================
 % ===========================================
