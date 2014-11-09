@@ -70,15 +70,17 @@ game_over(GameList) :-
         \+ player_has_pieces(GameList, p1),
                 write('Player 1 has no pieces left.'), nl,
                 write('Player 2 wins'), !, nl;
+        write('player 1 has pieces'), nl,
         \+ player_has_pieces(GameList, p2),
                 write('Player 2 has no pieces left.'), nl,
                 write('Player 1 wins'), !, nl;
+        write('player 2 has pieces'), nl,
         
         
-        \+ player_has_moves(GameList, p1, a, i),
+        \+ player_has_moves(GameList, p1, [a, i]),
                 write('Player 1 has no moves left.'), nl,
                 write('Player 2 wins'), !, nl;
-        \+ player_has_moves(GameList, p2, a, i),
+        \+ player_has_moves(GameList, p2, [a, i]),
                 write('Player 2 has no moves left.'), nl,
                 write('Player 1 wins'), !, nl.
 
@@ -113,7 +115,7 @@ next_piece(GameList, Player, [X, Y], [FX, FY]) :-
                 get_next_letter(Y, N, s),
                 convert_alpha_num(X, X2),
                 convert_alpha_num(N, Y2),
-                FX is X, FY is N,
+                FX = X, FY = N,
                 get_piece(GameList, [X2, Y2], PI),
                 check_piece_player(PI, Player);
         
@@ -122,7 +124,7 @@ next_piece(GameList, Player, [X, Y], [FX, FY]) :-
                 get_next_letter(X, N, s),
                 convert_alpha_num(N, X2),
                 convert_alpha_num(Y, Y2),
-                FX is N, FY is Y,
+                FX = N, FY = Y,
                 get_piece(GameList, [X2, Y2], PI),
                 check_piece_player(PI, Player);
 
@@ -137,7 +139,7 @@ next_piece(GameList, Player, [X, Y], [FX, FY]) :-
                 next_piece(GameList, Player, [N, Y], [FX, FY]).
 
 
-piece_has_move(GameList, [PX, PY], [X, Y]) :-
+piece_has_moves(GameList, [PX, PY], [X, Y]) :-
         
         convert_alpha_num(Y, Y1),
         Y1 < 9, Y \= p,
@@ -162,53 +164,22 @@ piece_has_move(GameList, [PX, PY], [X, Y]) :-
    
 % pass alpha everywhere
 % player_has_moves(gamelist, player, initX, initY)
-player_has_moves(GameList, Player, X, Y) :-
+player_has_moves(GameList, Player, [X, Y]) :-
+        
         convert_alpha_num(X, X1),
         convert_alpha_num(Y, Y1),
         X1 < 9, Y1 < 9,
         get_piece(GameList, [X1, Y1], P),
         check_piece_player(P, Player),
-        write('checking piece: '), write(P), nl,
-        piece_has_moves(GameList, [X, Y], [a, i]).
-
-player_has_moves(GameList, Player, X, Y) :-
-        
-        convert_alpha_num(Y, Y1),
-        Y1 < 9,
-                get_next_letter(Y, Y2, s),
-                player_has_moves(GameList, Player, X, Y2);
+        piece_has_moves(GameList, [X, Y], [a, i]);
         
         convert_alpha_num(X, X1),
-        X1 < 9,
-                get_next_letter(X, X2, s),
-                player_has_moves(GameList, Player, X2, i);
-        fail.
+        convert_alpha_num(Y, Y1),
+        X1 < 9, Y1 < 9,
+        % da merda no next-piece
+        next_piece(GameList, Player, [X, Y], [A, B]),
+        player_has_moves(GameList, Player,  [A, B]).
 
-% checks if a piece has a valid movement to it
-% piece_has_moves(gamelist, [pieceX, pieceY], [posX, posY]
-piece_has_moves(GameList, [X, Y], [A1, A2]) :-
-        % Check if is a valid position
-        convert_alpha_num(A1, A3),
-        convert_alpha_num(A2, A4),
-        A3 < 9, A4 < 9,
-        % Checks if the movement is possible
-        % if the movement is possible, return yes
-        can_move(GameList, [X, Y], [A1, A2]).
-
-piece_has_moves(GameList, [X, Y], [A1, A2]) :-
-        
-        write('next pos...'), nl,
-        convert_alpha_num(A2, A3),
-        A3 < 9,
-                get_next_letter(A2, B1, s),
-                piece_has_moves(GameList, [X, Y], [A1, B1]);
-        
-        convert_alpha_num(A2, A4),
-        A4 < 9,
-                get_next_letter(A1, B1, s),
-                piece_has_moves(GameList, [X, Y], [B1, A2]);
-        
-        fail.
 
 % ==============================
 %       DEBUG 

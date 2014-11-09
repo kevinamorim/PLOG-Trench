@@ -80,6 +80,7 @@ can_move(L, [R1, C1], [R2, C2]) :-
         get_direction(L, [R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR).
+
 % ===========================================
 % DISTANCE
 % ===========================================
