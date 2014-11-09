@@ -104,43 +104,84 @@ player_has_pieces(GameList, [P|R]) :-
 % ==============================================
 % checks if the player has any pieces width a valid move
 % ==============================================
-% 
+
+next_piece(GameList, Player, [X, Y], PI) :-
+        
+        convert_alpha_num(Y, Y1),
+        Y1 < 9, Y \= p,
+                get_next_letter(Y, N, s),
+                convert_alpha_num(X, X2),
+                convert_alpha_num(N, Y2),
+                get_piece(GameList, [X2, Y2], PI),
+                check_piece_player(PI, Player);
+        
+        convert_alpha_num(X, X1),
+        X1 < 9, X \= p,
+                get_next_letter(X, N, s),
+                convert_alpha_num(N, X2),
+                convert_alpha_num(Y, Y2),
+                get_piece(GameList, [X2, Y2], PI),
+                check_piece_player(PI, Player);
+
+        convert_alpha_num(Y, Y1),
+        Y1 < 9, Y \= p,
+                get_next_letter(Y, N, s),
+                next_piece(GameList, Player, [X, N], PI);
+        
+        convert_alpha_num(X, X1),
+        X1 < 9, X \= p,
+                get_next_letter(X, N, s),
+                next_piece(GameList, Player, [N, Y], PI).
+        
+        
+% pass alpha everywhere
+% player_has_moves(gamelist, player, initX, initY)
 player_has_moves(GameList, Player, X, Y) :-
         convert_alpha_num(X, X1),
         convert_alpha_num(Y, Y1),
         X1 < 9, Y1 < 9,
-        get_piece(GameList, [X1,Y1], P),
+        get_piece(GameList, [X1, Y1], P),
         check_piece_player(P, Player),
-        piece_has_moves(GameList, [X,Y], [a,i]).
+        write('checking piece: '), write(P), nl,
+        piece_has_moves(GameList, [X, Y], [a, i]).
 
 player_has_moves(GameList, Player, X, Y) :-
+        
+        convert_alpha_num(Y, Y1),
+        Y1 < 9,
+                get_next_letter(Y, Y2, s),
+                player_has_moves(GameList, Player, X, Y2);
+        
         convert_alpha_num(X, X1),
-        convert_alpha_num(Y, Y1),
-        X1 < 9, !,
-                X2 is X1 + 1,
-                player_has_moves(GameList, Player, X2, Y1);
-        convert_alpha_num(Y, Y1),
-        Y1 < 9, !,
-                Y2 is Y1 + 1,
-                player_has_moves(GameList, Player, 1, Y2);
+        X1 < 9,
+                get_next_letter(X, X2, s),
+                player_has_moves(GameList, Player, X2, i);
         fail.
 
 % checks if a piece has a valid movement to it
-piece_has_moves(GameList, [X,Y], [A1,A2]) :-
+% piece_has_moves(gamelist, [pieceX, pieceY], [posX, posY]
+piece_has_moves(GameList, [X, Y], [A1, A2]) :-
+        % Check if is a valid position
         convert_alpha_num(A1, A3),
         convert_alpha_num(A2, A4),
         A3 < 9, A4 < 9,
-        can_move(GameList, [X,Y], [A1,A2]).
+        % Checks if the movement is possible
+        % if the movement is possible, return yes
+        can_move(GameList, [X, Y], [A1, A2]).
 
-piece_has_moves(GameList, [X,Y], [A1,A2]) :-
-        convert_alpha_num(A1, A3),
-        A3 < 9, !,
-                B1 is A3 + 1,
-                piece_has_moves(GameList, [X,Y], [B1,A2]);
+piece_has_moves(GameList, [X, Y], [A1, A2]) :-
+        
+        write('next pos...'), nl,
+        convert_alpha_num(A2, A3),
+        A3 < 9,
+                get_next_letter(A2, B1, s),
+                piece_has_moves(GameList, [X, Y], [A1, B1]);
+        
         convert_alpha_num(A2, A4),
-        A4 < 9, !,
-                B2 is A4 + 1,
-                piece_has_moves(GameList, [X,Y], [1,B2]);
+        A4 < 9,
+                get_next_letter(A1, B1, s),
+                piece_has_moves(GameList, [X, Y], [B1, A2]);
+        
         fail.
 
 % ==============================

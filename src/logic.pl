@@ -53,7 +53,7 @@ set_piece(L, P, [R, C], NL) :-
 % canMove(GameList, [From], [To])
 can_move(L, [R1, C1], [R2, C2]) :- 
         %write('can move: '), write(R1), write(C1), write(R2), write(C2), nl,
-        R1 == R2, C1 == C2;
+        %R1 == R2, C1 == C2;
         
         convert_alpha_num(R1, A1),
         convert_alpha_num(C1, A2),
