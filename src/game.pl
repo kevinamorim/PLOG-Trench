@@ -77,10 +77,11 @@ game_over(GameList) :-
         write('player 2 has pieces'), nl,
         
         
-        \+ player_has_moves(GameList, p1, [a, i]),
+        \+ player_has_moves(GameList, p1, [1, 1]),
                 write('Player 1 has no moves left.'), nl,
                 write('Player 2 wins'), !, nl;
-        \+ player_has_moves(GameList, p2, [a, i]),
+        write('Player 1 has moves'), nl,
+        \+ player_has_moves(GameList, p2, [1, 1]),
                 write('Player 2 has no moves left.'), nl,
                 write('Player 1 wins'), !, nl.
 
@@ -107,78 +108,40 @@ player_has_pieces(GameList, [P|R]) :-
 % checks if the player has any pieces width a valid move
 % ==============================================
 
-% Gets the next piece for a Player, [X, Y] -> ALPHA MODE
-next_piece(GameList, Player, [X, Y], [FX, FY]) :-
-        
-        convert_alpha_num(Y, Y1),
-        Y1 < 9, Y \= p,
-                get_next_letter(Y, N, s),
-                convert_alpha_num(X, X2),
-                convert_alpha_num(N, Y2),
-                FX = X, FY = N,
-                get_piece(GameList, [X2, Y2], PI),
-                check_piece_player(PI, Player);
-        
-        convert_alpha_num(X, X1),
-        X1 < 9, X \= p,
-                get_next_letter(X, N, s),
-                convert_alpha_num(N, X2),
-                convert_alpha_num(Y, Y2),
-                FX = N, FY = Y,
-                get_piece(GameList, [X2, Y2], PI),
-                check_piece_player(PI, Player);
-
-        convert_alpha_num(Y, Y1),
-        Y1 < 9, Y \= p,
-                get_next_letter(Y, N, s),
-                next_piece(GameList, Player, [X, N], [FX, FY]);
-        
-        convert_alpha_num(X, X1),
-        X1 < 9, X \= p,
-                get_next_letter(X, N, s),
-                next_piece(GameList, Player, [N, Y], [FX, FY]).
-
-
-piece_has_moves(GameList, [PX, PY], [X, Y]) :-
-        
-        convert_alpha_num(Y, Y1),
-        Y1 < 9, Y \= p,
-                get_next_letter(Y, N, s),
-                can_move(GameList, [PX, PY], [X, N]);
-        
-        convert_alpha_num(X, X1),
-        X1 < 9, X \= p,
-                get_next_letter(X, N, s),
-                can_move(GameList, [PX, PY], [N, Y]);
-        
-        convert_alpha_num(Y, Y1),
-        Y1 < 9, Y \= p,
-                get_next_letter(Y, N, s),
-                piece_has_moves(GameList, [PX, PY], [X, N]);
-        
-        convert_alpha_num(X, X1),
-        X1 < 9, X \= p,
-                get_next_letter(X, N, s),
-                piece_has_moves(GameList, [PX, PY], [N, Y]).
-
-   
-% pass alpha everywhere
-% player_has_moves(gamelist, player, initX, initY)
+% checks if the player has any pieces width a valid move
 player_has_moves(GameList, Player, [X, Y]) :-
+        X < 9, Y < 9,
+                get_piece(GameList, [X, Y], P),
+                check_piece_player(P, Player),
+                piece_has_moves(GameList, [X, Y], [1, 1]).
+
+player_has_moves(GameList, Player, [X, Y]) :-
+        X < 9, !,
+                X1 is X + 1,
+                player_has_moves(GameList, Player, [X1, Y]);
         
-        convert_alpha_num(X, X1),
-        convert_alpha_num(Y, Y1),
-        X1 < 9, Y1 < 9,
-        get_piece(GameList, [X1, Y1], P),
-        check_piece_player(P, Player),
-        piece_has_moves(GameList, [X, Y], [a, i]);
-        
-        convert_alpha_num(X, X1),
-        convert_alpha_num(Y, Y1),
-        X1 < 9, Y1 < 9,
-        % da merda no next-piece
-        next_piece(GameList, Player, [X, Y], [A, B]),
-        player_has_moves(GameList, Player,  [A, B]).
+        Y < 9, !,
+                Y1 is Y + 1,
+                player_has_moves(GameList, Player, [1, Y1]);
+        fail.
+
+% checks if a piece has a valid movement to it
+piece_has_moves(GameList, [X,Y], [A1, A2]) :-
+        A1 < 9, A2 < 9,
+                convert_alpha_num(X1, X),
+                convert_alpha_num(Y1, Y),
+                convert_alpha_num(B1, A1),
+                convert_alpha_num(B2, A2),
+                can_move(GameList, [X1, Y1], [B1, B2]).
+
+piece_has_moves(GameList, [X,Y], [A1,A2]) :-
+        A1 < 9, !,
+                B1 is A1 + 1,
+                piece_has_moves(GameList, [X,Y], [B1,A2]);
+        A2 < 9, !,
+                B2 is A2 + 1,
+                piece_has_moves(GameList, [X,Y], [1,B2]);
+        fail.
 
 
 % ==============================

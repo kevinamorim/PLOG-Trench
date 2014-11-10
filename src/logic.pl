@@ -66,8 +66,8 @@ can_move(L, [R1, C1], [R2, C2]) :-
         DIST < (MAX + 1),       % Distance verification
         get_direction([R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
-        get_allowed_dir_for(PI, DIR);
-        %check_road(L, [R1, C1], [R2, C2]);
+        get_allowed_dir_for(PI, DIR),
+        check_road(L, [R1, C1], [R2, C2]);
         
         C1 \= C2,
         convert_alpha_num(R1, A1),
@@ -81,8 +81,8 @@ can_move(L, [R1, C1], [R2, C2]) :-
         DIST < (MAX + 1),       % Distance verification
         get_direction([R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
-        get_allowed_dir_for(PI, DIR).
-        %check_road(L, [R1, C1], [R2, C2]).
+        get_allowed_dir_for(PI, DIR),
+        check_road(L, [R1, C1], [R2, C2]).
 
 % ===========================================
 % DISTANCE
@@ -158,30 +158,46 @@ get_perpendicular_direction([R1, C1], [R2, C2], D) :-
 check_road(L, [R1, C1], [R2, C2]) :-
         R1 == R2,
         C1 \= C2,
-        convert_to_grid_pos(R1, C1, X1, _),
-        convert_to_grid_pos(R2, C2, X2, _),
-        X1 > X2,
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),
+        convert_to_grid_pos(X1, Y1, ROW1, _),
+        convert_to_grid_pos(X2, Y2, ROW2, _),
+        ROW1 > ROW2,
         check_road_diagonal(L, [R1, C1], [R2, C2], nw);
         
         R1 == R2,
         C1 \= C2,
-        convert_to_grid_pos(R1, C1, X1, _),
-        convert_to_grid_pos(R2, C2, X2, _),
-        X1 < X2,
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),
+        convert_to_grid_pos(X1, Y1, ROW1, _),
+        convert_to_grid_pos(X2, Y2, ROW2, _),
+        ROW1 < ROW2,
         check_road_diagonal(L, [R1, C1], [R2, C2], se);
         
         C1 == C2,
         R1 \= R2,
-        convert_to_grid_pos(R1, C1, X1, _),
-        convert_to_grid_pos(R2, C2, X2, _),
-        X1 > X2,
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),
+        convert_to_grid_pos(X1, Y1, ROW1, _),
+        convert_to_grid_pos(X2, Y2, ROW2, _),
+        ROW1 > ROW2,
         check_road_diagonal(L, [R1, C1], [R2, C2], ne);
         
         C1 == C2,
         R1 \= R2,
-        convert_to_grid_pos(R1, C1, X1, _),
-        convert_to_grid_pos(R2, C2, X2, _),
-        X1 < X2,
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),
+        convert_to_grid_pos(X1, Y1, ROW1, _),
+        convert_to_grid_pos(X2, Y2, ROW2, _),
+        ROW1 < ROW2,
         check_road_diagonal(L, [R1, C1], [R2, C2], sw);
         
         R1 \= R2,
