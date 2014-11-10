@@ -21,6 +21,7 @@ move_piece(L, [X1, Y1], [X2, Y2], NL) :-
         convert_alpha_num(Y1, C1),
         convert_alpha_num(X2, R2),
         convert_alpha_num(Y2, C2),
+        %write('from: '), write([R1, C1]), write(' to: '), write([R2, C2]), nl,
         get_piece(L, [R1, C1], P),
         can_move(L, [X1, Y1], [X2, Y2]), % Verifies if the move can be done
         set_piece(L, e, [R1, C1], L1),
@@ -31,7 +32,7 @@ move_piece(L, [X1, Y1], [X2, Y2], NL) :-
 % ===========================================
 % getPiece(GameList, [Row, Column], Piece).
 %       Row and Columns must be in:         [1, 2, 3, 4, 5, 6, 7, 8]
-get_piece(L, [R,C], P) :-  
+get_piece(L, [R, C], P) :-  
         convert_to_grid_pos(R, C, Row, Col),
         select_elem(Row, Col, L, P).
 
@@ -63,7 +64,7 @@ can_move(L, [R1, C1], [R2, C2]) :-
         max_distance_for(PI, MAX),
         %write('Max: '), write(MAX), nl,
         DIST < (MAX + 1),       % Distance verification
-        get_direction(L, [R1, C1], [R2, C2], DIR),
+        get_direction([R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR);
         %check_road(L, [R1, C1], [R2, C2]);
@@ -78,7 +79,7 @@ can_move(L, [R1, C1], [R2, C2]) :-
         max_distance_for(PI, MAX),
         %write('Max: '), write(MAX), nl,
         DIST < (MAX + 1),       % Distance verification
-        get_direction(L, [R1, C1], [R2, C2], DIR),
+        get_direction([R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR).
         %check_road(L, [R1, C1], [R2, C2]).
@@ -110,64 +111,42 @@ calculate_distance(SRC, DST, D) :-
 % ===========================================
 % DIRECTION
 % ===========================================
-% 'f' -> Front
-% 'b' -> Back
-% 'l' -> Left
-% 'r' -> Right
+% get_direction([SrcX, SrcY], [DestX, DestY], Direction)) : Coordinates in alpha mode
 % 'd' -> Diagonal
-get_direction(L, [R1, C1], [R2, C2], D) :-
+get_direction([R1, C1], [R2, C2], D) :-
         R1 == R2, C1 \== C2, D = d; 
         R1 \== R2, C1 == C2, D = d;
-        R1 \== R2, C1 \== C2, get_perpendicular_direction(L, [R1, C1], [R2, C2], D).
+        R1 \== R2, C1 \== C2, get_perpendicular_direction([R1, C1], [R2, C2], D).
 
-get_perpendicular_direction(L, [R1, C1], [R2, C2], D) :-  
+get_perpendicular_direction([R1, C1], [R2, C2], D) :-  
+        
+        % South Movement
         convert_alpha_num(R1, X1),
         convert_alpha_num(C1, Y1),   
         convert_alpha_num(R2, X2),
         convert_alpha_num(C2, Y2),      
-        get_piece(L, [X1, Y1], PI),
-        check_piece_player(PI, P),
-        P == p1,
-        X1 < X2, Y1 < Y2, D = f;
+        X1 < X2, Y1 < Y2, D = south;
         
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),   
-        convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),   
-        get_piece(L, [X1, Y1], PI),
-        check_piece_player(PI, P),
-        P == p2,
-        X1 < X2, Y1 < Y2, D = b;
-        
+        % North Movement
         convert_alpha_num(R1, X1),
         convert_alpha_num(C1, Y1),   
         convert_alpha_num(R2, X2),
         convert_alpha_num(C2, Y2),  
-        get_piece(L, [X1, Y1], PI),
-        check_piece_player(PI, P),
-        P == p1,
-        X1 > X2, Y1 > Y2, D = b;
+        X1 > X2, Y1 > Y2, D = north;
         
+        % East Movement
         convert_alpha_num(R1, X1),
         convert_alpha_num(C1, Y1),   
         convert_alpha_num(R2, X2),
         convert_alpha_num(C2, Y2), 
-        get_piece(L, [X1, Y1], PI),
-        check_piece_player(PI, P),
-        P == p2,
-        X1 > X2, Y1 > Y2, D = f;
+        X1 > X2, Y1 < Y2, D = east;
         
+        % West Movement
         convert_alpha_num(R1, X1),
         convert_alpha_num(C1, Y1),   
         convert_alpha_num(R2, X2),
         convert_alpha_num(C2, Y2), 
-        X1 > X2, Y1 < Y2, D = r;
-         
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),   
-        convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2), 
-        X1 < X2, Y1 > Y2, D = l. 
+        X1 < X2, Y1 > Y2, D = west. 
 
 % ===========================================
 % ===========================================

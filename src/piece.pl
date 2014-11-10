@@ -18,43 +18,43 @@
 
 % Player 1
 get_allowed_dir_for(g1, D) :- D == d.
-get_allowed_dir_for(g1, D) :- D == f.
-get_allowed_dir_for(g1, D) :- D == b.
-get_allowed_dir_for(g1, D) :- D == l.
-get_allowed_dir_for(g1, D) :- D == r.
+get_allowed_dir_for(g1, D) :- D == south.
+get_allowed_dir_for(g1, D) :- D == north.
+get_allowed_dir_for(g1, D) :- D == west.
+get_allowed_dir_for(g1, D) :- D == east.
 
 get_allowed_dir_for(co1, D) :- D == d.
-get_allowed_dir_for(co1, D) :- D == f.
-get_allowed_dir_for(co1, D) :- D == l.
-get_allowed_dir_for(co1, D) :- D == r.
+get_allowed_dir_for(co1, D) :- D == south.
+get_allowed_dir_for(co1, D) :- D == west.
+get_allowed_dir_for(co1, D) :- D == east.
 
 get_allowed_dir_for(ca1, D) :- D == d.
-get_allowed_dir_for(ca1, D) :- D == f.
-get_allowed_dir_for(ca1, D) :- D == b.
+get_allowed_dir_for(ca1, D) :- D == south.
+get_allowed_dir_for(ca1, D) :- D == north.
 
 get_allowed_dir_for(sa1, D) :- D == d.
-get_allowed_dir_for(sa1, D) :- D == f.
+get_allowed_dir_for(sa1, D) :- D == south.
 
 get_allowed_dir_for(so1, D) :- D == d.
 
 % Player 2
 get_allowed_dir_for(g2, D) :- D == d.
-get_allowed_dir_for(g2, D) :- D == f.
-get_allowed_dir_for(g2, D) :- D == b.
-get_allowed_dir_for(g2, D) :- D == l.
-get_allowed_dir_for(g2, D) :- D == r.
+get_allowed_dir_for(g2, D) :- D == north.
+get_allowed_dir_for(g2, D) :- D == south.
+get_allowed_dir_for(g2, D) :- D == west.
+get_allowed_dir_for(g2, D) :- D == e.
 
 get_allowed_dir_for(co2, D) :- D == d.
-get_allowed_dir_for(co2, D) :- D == f.
-get_allowed_dir_for(co2, D) :- D == l.
-get_allowed_dir_for(co2, D) :- D == r.
+get_allowed_dir_for(co2, D) :- D == north.
+get_allowed_dir_for(co2, D) :- D == west.
+get_allowed_dir_for(co2, D) :- D == east.
 
 get_allowed_dir_for(ca2, D) :- D == d.
-get_allowed_dir_for(ca2, D) :- D == f.
-get_allowed_dir_for(ca2, D) :- D == b.
+get_allowed_dir_for(ca2, D) :- D == north.
+get_allowed_dir_for(ca2, D) :- D == south.
 
 get_allowed_dir_for(sa2, D) :- D == d.
-get_allowed_dir_for(sa2, D) :- D == f.
+get_allowed_dir_for(sa2, D) :- D == north.
 
 get_allowed_dir_for(so2, D) :- D == d.
 % ===============================

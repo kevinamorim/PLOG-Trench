@@ -24,20 +24,20 @@ play_game(L, P) :-
 
 % Player move
 % read_player_move(GameList, Player, NewGameList)
-read_player_move(L, Pl, NL) :-
-        write('Player: '), write(Pl), nl,
+read_player_move(L, Player, NL) :-
+        write('Player: '), write(Player), nl,
         write('Select Piece (xy): '),
         readPosition([A1,A2]),
         convert_alpha_num(A1, R),
         convert_alpha_num(A2, C),
         get_piece(L, [R,C], P),
-        check_piece_player(P, Pl), !,
+        check_piece_player(P, Player), %!,
         write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
         write('Select Target (xy): '),
         readPosition([B1,B2]),
-        move_piece(L, [A1,A2], [B1,B2], NL), !;
+        move_piece(L, [A1,A2], [B1,B2], NL);
         %else : happens when the player inserts coordinates of a piece that it's not his
-        read_player_move(L, Pl, NL).
+        read_player_move(L, Player, NL).
                     
 % ==============================
 %       Game Initialization
