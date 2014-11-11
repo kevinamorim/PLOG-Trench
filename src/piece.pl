@@ -17,46 +17,76 @@
 % Returns allowed directions for each piece.
 
 % Player 1
-get_allowed_dir_for(g1, D) :- D == d.
-get_allowed_dir_for(g1, D) :- D == south.
+get_allowed_dir_for(g1, D) :- D == northeast.
+get_allowed_dir_for(g1, D) :- D == northwest.
+get_allowed_dir_for(g1, D) :- D == southeast.
+get_allowed_dir_for(g1, D) :- D == southwest.
 get_allowed_dir_for(g1, D) :- D == north.
-get_allowed_dir_for(g1, D) :- D == west.
+get_allowed_dir_for(g1, D) :- D == south.
 get_allowed_dir_for(g1, D) :- D == east.
+get_allowed_dir_for(g1, D) :- D == west.
 
-get_allowed_dir_for(co1, D) :- D == d.
-get_allowed_dir_for(co1, D) :- D == south.
+get_allowed_dir_for(co1, D) :- D == northeast.
+get_allowed_dir_for(co1, D) :- D == northwest.
+get_allowed_dir_for(co1, D) :- D == southeast.
+get_allowed_dir_for(co1, D) :- D == southwest.
+get_allowed_dir_for(co1, D) :- D == north.
 get_allowed_dir_for(co1, D) :- D == west.
 get_allowed_dir_for(co1, D) :- D == east.
 
-get_allowed_dir_for(ca1, D) :- D == d.
-get_allowed_dir_for(ca1, D) :- D == south.
+get_allowed_dir_for(ca1, D) :- D == northeast.
+get_allowed_dir_for(ca1, D) :- D == northwest.
+get_allowed_dir_for(ca1, D) :- D == southeast.
+get_allowed_dir_for(ca1, D) :- D == southwest.
 get_allowed_dir_for(ca1, D) :- D == north.
+get_allowed_dir_for(ca1, D) :- D == south.
 
-get_allowed_dir_for(sa1, D) :- D == d.
-get_allowed_dir_for(sa1, D) :- D == south.
+get_allowed_dir_for(sa1, D) :- D == northeast.
+get_allowed_dir_for(sa1, D) :- D == northwest.
+get_allowed_dir_for(sa1, D) :- D == southeast.
+get_allowed_dir_for(sa1, D) :- D == southwest.
+get_allowed_dir_for(sa1, D) :- D == north.
 
-get_allowed_dir_for(so1, D) :- D == d.
+get_allowed_dir_for(so1, D) :- D == northeast.
+get_allowed_dir_for(so1, D) :- D == northwest.
+get_allowed_dir_for(so1, D) :- D == southeast.
+get_allowed_dir_for(so1, D) :- D == southwest.
 
 % Player 2
-get_allowed_dir_for(g2, D) :- D == d.
+get_allowed_dir_for(g2, D) :- D == northeast.
+get_allowed_dir_for(g2, D) :- D == northwest.
+get_allowed_dir_for(g2, D) :- D == southeast.
+get_allowed_dir_for(g2, D) :- D == southwest.
 get_allowed_dir_for(g2, D) :- D == north.
 get_allowed_dir_for(g2, D) :- D == south.
+get_allowed_dir_for(g2, D) :- D == east.
 get_allowed_dir_for(g2, D) :- D == west.
-get_allowed_dir_for(g2, D) :- D == e.
 
-get_allowed_dir_for(co2, D) :- D == d.
+get_allowed_dir_for(co2, D) :- D == northeast.
+get_allowed_dir_for(co2, D) :- D == northwest.
+get_allowed_dir_for(co2, D) :- D == southeast.
+get_allowed_dir_for(co2, D) :- D == southwest.
 get_allowed_dir_for(co2, D) :- D == north.
 get_allowed_dir_for(co2, D) :- D == west.
 get_allowed_dir_for(co2, D) :- D == east.
 
-get_allowed_dir_for(ca2, D) :- D == d.
+get_allowed_dir_for(ca2, D) :- D == northeast.
+get_allowed_dir_for(ca2, D) :- D == northwest.
+get_allowed_dir_for(ca2, D) :- D == southeast.
+get_allowed_dir_for(ca2, D) :- D == southwest.
 get_allowed_dir_for(ca2, D) :- D == north.
 get_allowed_dir_for(ca2, D) :- D == south.
 
-get_allowed_dir_for(sa2, D) :- D == d.
+get_allowed_dir_for(sa2, D) :- D == northeast.
+get_allowed_dir_for(sa2, D) :- D == northwest.
+get_allowed_dir_for(sa2, D) :- D == southeast.
+get_allowed_dir_for(sa2, D) :- D == southwest.
 get_allowed_dir_for(sa2, D) :- D == north.
 
-get_allowed_dir_for(so2, D) :- D == d.
+get_allowed_dir_for(so2, D) :- D == northeast.
+get_allowed_dir_for(so2, D) :- D == northwest.
+get_allowed_dir_for(so2, D) :- D == southeast.
+get_allowed_dir_for(so2, D) :- D == southwest.
 % ===============================
 % ===============================
 

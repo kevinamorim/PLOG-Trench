@@ -31,10 +31,11 @@ read_player_move(L, Player, NL) :-
         write('Select Target (xy): '),
         readPosition([B1,B2]),
         get_piece(L, [A1,A2], P),
-        check_piece_player(P, Player), %!,
+        check_piece_player(P, Player),
         %write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
-        can_move(L, [A1,A2], [B1,B2], Player), % Verifies if the move can be done
+        can_move(L, [A1,A2], [B1,B2], Player), !, % Verifies if the move can be done
         move_piece(L, [A1,A2], [B1,B2], NL);
+        
         %else : happens when the player inserts coordinates of a piece that it's not his
         write('> Invalid Move...'), nl,
         print_board(L),

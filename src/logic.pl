@@ -13,11 +13,22 @@
 % Here all movements and verifications are made. 
 % movePiece(GameList, [From], [To], NewGameList).
 %       Coordinates in alpha
-move_piece(L, [X1, Y1], [X2, Y2], NL) :-
-        get_piece(L, [X1, Y1], P),
-        set_piece(L, e, [X1, Y1], L1),
-        set_piece(L1, P, [X2, Y2], NL).
+move_piece(L, [P1, P2], [T1, T2], NL) :-
+        get_piece(L, [P1, P2], P),
+        get_direction([P1, P2], [T1, T2], D),
+        %write('move_piece -> capture_all()'), nl,
+        R = P1, C = P2,
+        capture_all(L, [P1, P2], [R, C], [T1, T2], D, L1),
+        set_piece(L1, P, [T1, T2], NL).
 
+capture_all(L, [P1, P2], [R,C], [T1, T2], D, NL) :-
+        
+        R == T1, C == T2, NL = L;
+        
+        set_piece(L, e, [R,C], L1),
+        inc([R,C], [TR,TC], D),
+        capture_all(L1, [P1, P2], [TR, TC], [T1, T2], D, NL).
+        
 % ===========================================
 %       Pieces getter & setter
 % ===========================================
@@ -95,173 +106,100 @@ calculate_distance(SRC, DST, D) :-
 % DIRECTION
 % ===========================================
 % get_direction([SrcX, SrcY], [DestX, DestY], Direction)) : Coordinates in alpha mode
-% 'd' -> Diagonal
 get_direction([R1, C1], [R2, C2], D) :-
-        R1 == R2, C1 \== C2, D = d; 
-        R1 \== R2, C1 == C2, D = d;
-        R1 \== R2, C1 \== C2, get_perpendicular_direction([R1, C1], [R2, C2], D).
+        
+        R1 == R2, C1 \= C2,
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(C2, Y2),
+        Y2 > Y1, D = southeast;
 
-get_perpendicular_direction([R1, C1], [R2, C2], D) :-  
+        R1 == R2, C1 \= C2,
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(C2, Y2),
+        Y2 < Y1, D = northwest;
         
-        % South Movement
+        C1 == C2,  R1 \= R2,
         convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),   
         convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),      
-        X1 < X2, Y1 < Y2, D = south;
+        X2 > X1, D = southwest;
+
+        C1 == C2, R1 \= R2,
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(R2, X2),
+        X2 < X1, D = northeast;
         
-        % North Movement
+        R1 \= R2, C1 \= C2,
         convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(C1, Y1),
         convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),  
-        X1 > X2, Y1 > Y2, D = north;
+        convert_alpha_num(C2, Y2),
+        IncX is X2 - X1, IncY is Y2 - Y1, 
+        IncX == IncY, X2 > X1, D = south;
         
-        % East Movement
+        R1 \= R2, C1 \= C2,
         convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(C1, Y1),
         convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2), 
-        X1 > X2, Y1 < Y2, D = east;
+        convert_alpha_num(C2, Y2),
+        IncX is X2 - X1, IncY is Y2 - Y1, 
+        IncX == IncY, X2 < X1, D = north;
         
-        % West Movement
+        R1 \= R2, C1 \= C2,
         convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),   
+        convert_alpha_num(C1, Y1),
         convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2), 
-        X1 < X2, Y1 > Y2, D = west. 
+        convert_alpha_num(C2, Y2),
+        IncX is X1 - X2, IncY is Y2 - Y1, 
+        IncX == IncY, X1 > X2, D = east;
+
+        R1 \= R2, C1 \= C2,
+        convert_alpha_num(R1, X1),
+        convert_alpha_num(C1, Y1),
+        convert_alpha_num(R2, X2),
+        convert_alpha_num(C2, Y2),
+        IncX is X1 - X2, IncY is Y2 - Y1, 
+        IncX == IncY, X1 < X2, D = west.
+        
+   
 
 % ===========================================
 % VERIFICATION OF TRAJECTS
 % ===========================================
 %       Coordinates in alpha
-check_road(L, [P1,P2], [R1,C1], [R2, C2], Player, Count) :-
+check_road(L, [P1,P2], [R1,C1], [T1, T2], Player, Count) :-
         
         % Finish it
-        R1 == R2, C1 == C2,
-                can_capture(L, [P1,P2], [R2,C2], Player);
-        
-        % Finish it, but softly
-        /*
-        R1 == R2, C1 == C2, 
-                % if no piece is there
-                        is_valid_house(L, [R1,C1], Count);
-        */
-        
-        % southeast                                                         
-        R1 == R2, C1 \= C2,
-                convert_alpha_num(C1, Y1),
-                convert_alpha_num(C2, Y2),
-                Y2 > Y1,
-                        is_valid_house(L, [R1,C1], Count),
-                        %write('> southeast'), nl,
-                        get_next_letter(C1, TC, s),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [R1, TC], [R2, C2], Player, Count1);
-        
-        % northwest
-        R1 == R2, C1 \= C2,
-                convert_alpha_num(C1, Y1),
-                convert_alpha_num(C2, Y2),
-                Y2 < Y1,
-                        is_valid_house(L, [R1,C1], Count),
-                        %write('> northwest'), nl,
-                        get_next_letter(C1, TC, n),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [R1, TC], [R2, C2], Player, Count1);
-        
-        % southwest
-        C1 == C2,  R1 \= R2,
-                convert_alpha_num(R1, X1),
-                convert_alpha_num(R2, X2),
-                X2 > X1,
-                        is_valid_house(L, [R1,C1], Count),
-                        %write('> southwest'), nl,
-                        get_next_letter(R1, TR, s),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [TR, C1], [R2, C2], Player, Count1);
-        
-        % northeast
-        C1 == C2, R1 \= R2,
-                convert_alpha_num(R1, X1),
-                convert_alpha_num(R2, X2),
-                X2 < X1,
-                        is_valid_house(L, [R1,C1], Count),
-                        %write('> northeast'), nl,
-                        get_next_letter(R1, TR, n),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [TR, C1], [R2, C2], Player, Count1);
-        
-        % south
-        R1 \= R2, C1 \= C2,
-                convert_alpha_num(R1, X1),
-                convert_alpha_num(C1, Y1),
-                convert_alpha_num(R2, X2),
-                convert_alpha_num(C2, Y2),
-                IncX is X2 - X1, IncY is Y2 - Y1, 
-                IncX == IncY, X2 > X1,
-                        is_valid_house(L, [R1,C1], Count),
-                        get_next_letter(R1, TR, s),
-                        get_next_letter(C1, TC, s),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
-        
-        % should be north lol
-        R1 \= R2, C1 \= C2,
-                convert_alpha_num(R1, X1),
-                convert_alpha_num(C1, Y1),
-                convert_alpha_num(R2, X2),
-                convert_alpha_num(C2, Y2),
-                IncX is X2 - X1, IncY is Y2 - Y1, 
-                IncX == IncY, X2 < X1,
-                        is_valid_house(L, [R1,C1], Count),
-                        get_next_letter(R1, TR, n),
-                        get_next_letter(C1, TC, n),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
-        
-        % east
-        R1 \= R2, C1 \= C2,
-                convert_alpha_num(R1, X1),
-                convert_alpha_num(C1, Y1),
-                convert_alpha_num(R2, X2),
-                convert_alpha_num(C2, Y2),
-                IncX is X1 - X2, IncY is Y2 - Y1, 
-                IncX == IncY, X1 > X2,
-                        is_valid_house(L, [R1,C1], Count),
-                        get_next_letter(R1, TR, n),
-                        get_next_letter(C1, TC, s),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
-        
-        % west
-        R1 \= R2, C1 \= C2,
-                convert_alpha_num(R1, X1),
-                convert_alpha_num(C1, Y1),
-                convert_alpha_num(R2, X2),
-                convert_alpha_num(C2, Y2),
-                IncX is X1 - X2, IncY is Y2 - Y1, 
-                IncX == IncY, X1 < X2,
-                        is_valid_house(L, [R1,C1], Count),
-                        get_next_letter(R1, TR, s),
-                        get_next_letter(C1, TC, n),
-                        Count1 is Count + 1,
-                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
+        R1 == T1, C1 == T2, !,
+                %write('--> can_capture()'), nl,
+                can_capture(L, [P1,P2], [T1,T2], Player);
+
+        get_direction([P1, P2], [T1, T2], D),
+        is_valid_house(L, [P1,P2], [R1,C1], Player, Count),
+        %write('Direction: '), write(D), nl,
+        inc([R1,C1], [TR, TC], D),
+        Count1 is Count + 1, !,
+        check_road(L, [P1,P2], [TR, TC], [T1, T2], Player, Count1);
         
         !, fail.
       
 % ===========================================
 %   Checking stuff
 % ===========================================
-is_valid_house([_|_], [_,_], 0) :- !.
+is_valid_house([_|_], [_,_], [_,_], _, 0) :- !.
         
-is_valid_house(L, [R,C], Count) :-
+is_valid_house(L, [P1,P2], [R,C], Player, Count) :-
         Count > 0,
-               is_empty_piece(L, [R,C]).
+                is_empty_piece(L, [R,C]);
+        
+        Count > 0,
+                is_trench([P1,P2]),
+                get_piece(L, [R, C], Piece),
+                \+ check_piece_player(Piece, Player).
 
 can_capture(L, [P1,P2], [T1,T2], Player) :-
         
         is_empty_piece(L, [T1,T2]);
+        %write('it\'s soooo true'), nl;
         
         is_trench([P1,P2]), is_trench([T1,T2]), !, fail;
         
@@ -274,13 +212,12 @@ can_capture(L, [P1,P2], [T1,T2], Player) :-
                 %write('Row: '), write(Row), nl,
                 in_enemy_turf(Player, Row);
         
-        get_piece(L, [P1, P2], Piece),
+        get_piece(L, [T1, T2], Piece),
         \+ check_piece_player(Piece, Player).
 
 %
 is_empty_piece(L, [R,C]) :-
-        get_piece(L, [R,C], PI),
-        PI == e.
+        get_piece(L, [R,C], e).
 
 % ===========================================
 % Le Trench
@@ -290,5 +227,56 @@ is_trench([R, C]) :-
         convert_alpha_num(C,Y),
         convert_to_grid_pos(X, Y, Row, _),
         Row == 8.
+
+% ===========================================
+%  lel
+% ===========================================
+inc([R,C], [NextR, NextC], D) :-
+        
+        % southeast
+        D == southeast,
+                get_next_letter(C, NextC, s),
+                NextR = R;
+                %write(NextR), nl;
+        
+        % northwest
+        D == northwest, 
+                get_next_letter(C, NextC, n),
+                NextR = R;
+                %write([NextR, NextC]), nl;
+        
+        % southwest
+        D == southwest,
+                get_next_letter(R, NextR, s),
+                NextC = C;
+                %write([NextR, NextC]), nl;
+        
+        % northeast
+        D == northeast, 
+                get_next_letter(R, NextR, n),
+                NextC = C;
+                %write([NextR, NextC]), nl;
+        
+        % south
+        D == south, 
+                get_next_letter(R, NextR, s),
+                get_next_letter(C, NextC, s);
+        
+        % north
+        D == north,
+                get_next_letter(R, NextR, n),
+                get_next_letter(C, NextC, n);
+        
+        % east
+        D == east,
+                get_next_letter(R, NextR, n),
+                get_next_letter(C, NextC, s);
+        
+        % west
+        D == west, 
+                get_next_letter(R, NextR, s),
+                get_next_letter(C, NextC, n).
+                
+
 % ===========================================
 % ===========================================
