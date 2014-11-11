@@ -65,8 +65,6 @@ get_allowed_dir_for(so2, D) :- D == d.
 % ===============================
 % Predicates that returns the maximum distance that each piece can move.
 % Base case (in case an invalid piece is queried)
-max_distance_for(_, M) :- M is 0.
-
 % Player 1
 max_distance_for(g1, M) :- M is 5.
 max_distance_for(co1, M) :- M is 4.
