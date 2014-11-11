@@ -51,14 +51,14 @@ can_move(L, [R1, C1], [R2, C2], Player) :-
         
         % else
         get_piece(L, [R1, C1], PI),
-        write('Piece: '), write(PI), nl,
+        %write('Piece: '), write(PI), nl,
         get_distance([R1, C1], [R2, C2], DIST),
-        write('Distance: '), write(DIST), nl,
+        %write('Distance: '), write(DIST), nl,
         max_distance_for(PI, MAX),
-        write('Max: '), write(MAX), nl,
+        %write('Max: '), write(MAX), nl,
         DIST < (MAX + 1),       % Distance verification
         get_direction([R1, C1], [R2, C2], DIR),
-        write('Direction: '), write(DIR), nl,
+        %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR),
         check_road(L, [R1, C1], [R2, C2], Player, 0).
 
@@ -79,7 +79,7 @@ get_distance([R1, C1], [R2, C2], D) :-
         R1 \== R2, C1 == C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y), calculate_distance(X, Y, D).
 
 get_distance([R1, C1], [R2, C2], D) :-
-        R1 \== R2, C1 \== C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y),calculate_distance(X, Y, D).
+        R1 \== R2, C1 \== C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y), calculate_distance(X, Y, D).
 
 % Calculates the distance between two coordinates.
 calculate_distance(SRC, DST, D) :-
