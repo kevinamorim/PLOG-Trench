@@ -34,17 +34,15 @@ capture_all(L, [P1, P2], [R,C], [T1, T2], D, NL) :-
 % ===========================================
 % getPiece(GameList, [Row, Column], Piece).
 %       Coordinates in alpha
-get_piece(L, [R, C], P) :-  
-        convert_alpha_num(R, R1),
-        convert_alpha_num(C, C1),
+get_piece(L, [R, C], P) :-
+        convert_alpha_point([R, C], [R1, C1]),  
         convert_to_grid_pos(R1, C1, Row, Col),
         select_elem(Row, Col, L, P).
 
 % setPiece(GameList, Piece, [Pos], NewGameList)
 %       Coordinates in alpha
 set_piece(L, P, [R, C], NL) :-
-        convert_alpha_num(R, R1),
-        convert_alpha_num(C, C1),
+        convert_alpha_point([R, C], [R1, C1]),  
         convert_to_grid_pos(R1, C1, Row, Col),
         nth1(Row, L, X),
         replace(X, Col, P, Res),
@@ -88,13 +86,13 @@ can_move(L, [R1, C1], [R2, C2], Player) :-
 % We use a generic method for calculating the distance, passing to it the two coordinates that will 
 %   make the distance.
 get_distance([R1, C1], [R2, C2], D) :- 
-        R1 == R2, C1 \== C2, convert_alpha_num(C1, X), convert_alpha_num(C2, Y), calculate_distance(X, Y, D).
+        R1 == R2, C1 \== C2, convert_alpha_point([C1, C2], [X, Y]),  calculate_distance(X, Y, D).
 
 get_distance([R1, C1], [R2, C2], D) :-
-        R1 \== R2, C1 == C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y), calculate_distance(X, Y, D).
+        R1 \== R2, C1 == C2, convert_alpha_point([R1, R2], [X, Y]), calculate_distance(X, Y, D).
 
 get_distance([R1, C1], [R2, C2], D) :-
-        R1 \== R2, C1 \== C2, convert_alpha_num(R1, X), convert_alpha_num(R2, Y), calculate_distance(X, Y, D).
+        R1 \== R2, C1 \== C2,convert_alpha_point([R1, R2], [X, Y]), calculate_distance(X, Y, D).
 
 % Calculates the distance between two coordinates.
 calculate_distance(SRC, DST, D) :-
@@ -109,54 +107,42 @@ calculate_distance(SRC, DST, D) :-
 get_direction([R1, C1], [R2, C2], D) :-
         
         R1 == R2, C1 \= C2,
-        convert_alpha_num(C1, Y1),
-        convert_alpha_num(C2, Y2),
+        convert_alpha_point([C1, C2], [Y1, Y2]),
         Y2 > Y1, D = southeast;
 
         R1 == R2, C1 \= C2,
-        convert_alpha_num(C1, Y1),
-        convert_alpha_num(C2, Y2),
+        convert_alpha_point([C1, C2], [Y1, Y2]),
         Y2 < Y1, D = northwest;
         
         C1 == C2,  R1 \= R2,
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(R2, X2),
+        convert_alpha_point([R1, R2], [X1, X2]),
         X2 > X1, D = southwest;
 
         C1 == C2, R1 \= R2,
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(R2, X2),
+        convert_alpha_point([R1, R2], [X1, X2]),
         X2 < X1, D = northeast;
         
         R1 \= R2, C1 \= C2,
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),
-        convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),
+        convert_alpha_point([R1, C1], [X1, Y1]),
+        convert_alpha_point([R2, C2], [X2, Y2]),
         IncX is X2 - X1, IncY is Y2 - Y1, 
         IncX == IncY, X2 > X1, D = south;
         
         R1 \= R2, C1 \= C2,
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),
-        convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),
+        convert_alpha_point([R1, C1], [X1, Y1]),
+        convert_alpha_point([R2, C2], [X2, Y2]),
         IncX is X2 - X1, IncY is Y2 - Y1, 
         IncX == IncY, X2 < X1, D = north;
         
         R1 \= R2, C1 \= C2,
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),
-        convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),
+        convert_alpha_point([R1, C1], [X1, Y1]),
+        convert_alpha_point([R2, C2], [X2, Y2]),
         IncX is X1 - X2, IncY is Y2 - Y1, 
         IncX == IncY, X1 > X2, D = east;
 
         R1 \= R2, C1 \= C2,
-        convert_alpha_num(R1, X1),
-        convert_alpha_num(C1, Y1),
-        convert_alpha_num(R2, X2),
-        convert_alpha_num(C2, Y2),
+        convert_alpha_point([R1, C1], [X1, Y1]),
+        convert_alpha_point([R2, C2], [X2, Y2]),
         IncX is X1 - X2, IncY is Y2 - Y1, 
         IncX == IncY, X1 < X2, D = west.
         
@@ -206,8 +192,7 @@ can_capture(L, [P1,P2], [T1,T2], Player) :-
         is_trench([T1,T2]),
                 get_piece(L, [T1, T2], Piece),
                 \+ check_piece_player(Piece, Player),
-                convert_alpha_num(P1,X),
-                convert_alpha_num(P2,Y),
+                convert_alpha_point([P1, P2], [X, Y]),
                 convert_to_grid_pos(X, Y, Row, _),
                 %write('Row: '), write(Row), nl,
                 in_enemy_turf(Player, Row);
@@ -223,8 +208,7 @@ is_empty_piece(L, [R,C]) :-
 % Le Trench
 % ===========================================
 is_trench([R, C]) :-
-        convert_alpha_num(R,X),
-        convert_alpha_num(C,Y),
+        convert_alpha_point([R, C], [X, Y]),
         convert_to_grid_pos(X, Y, Row, _),
         Row == 8.
 
