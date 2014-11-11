@@ -28,17 +28,18 @@ read_player_move(L, Player, NL) :-
         write('Player: '), write(Player), nl,
         write('Select Piece (xy): '),
         readPosition([A1,A2]),
-        convert_alpha_num(A1, R),
-        convert_alpha_num(A2, C),
-        get_piece(L, [R,C], P),
-        check_piece_player(P, Player), %!,
-        write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
         write('Select Target (xy): '),
         readPosition([B1,B2]),
-        move_piece(L, [A1,A2], [B1,B2], NL, Player);
+        get_piece(L, [A1,A2], P),
+        check_piece_player(P, Player), %!,
+        %write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
+        can_move(L, [A1,A2], [B1,B2], Player), % Verifies if the move can be done
+        move_piece(L, [A1,A2], [B1,B2], NL);
         %else : happens when the player inserts coordinates of a piece that it's not his
+        write('> Invalid Move...'), nl,
+        print_board(L),
         read_player_move(L, Player, NL).
-                    
+        
 % ==============================
 %       Game Initialization
 % ==============================
@@ -80,7 +81,7 @@ game_over(GameList) :-
         \+ player_has_moves(GameList, p1, [1, 1]),
                 write('Player 1 has no moves left.'), nl,
                 write('Player 2 wins'), !, nl;
-        write('Player 1 has moves'), nl,
+        write('Player 1 has moves'), nl, %!,
         \+ player_has_moves(GameList, p2, [1, 1]),
                 write('Player 2 has no moves left.'), nl,
                 write('Player 1 wins'), !, nl.
@@ -111,7 +112,9 @@ player_has_pieces(GameList, [P|R]) :-
 % checks if the player has any pieces width a valid move
 player_has_moves(GameList, Player, [X, Y]) :-
         X < 9, Y < 9,
-                get_piece(GameList, [X, Y], P),
+                convert_alpha_num(R,X),
+                convert_alpha_num(C,Y),
+                get_piece(GameList, [R, C], P),
                 check_piece_player(P, Player),
                 piece_has_moves(GameList, [X, Y], [1, 1], Player).
 
@@ -132,6 +135,7 @@ piece_has_moves(GameList, [X,Y], [A1, A2], Player) :-
                 convert_alpha_num(Y1, Y),
                 convert_alpha_num(B1, A1),
                 convert_alpha_num(B2, A2),
+                write('> CALL'), nl,
                 can_move(GameList, [X1, Y1], [B1, B2], Player).
 
 piece_has_moves(GameList, [X,Y], [A1,A2], Player) :-
