@@ -2,15 +2,15 @@
 % Get Positions
 % ========================
 
-convert_to_grid_pos(R, C, Line, Col) :-
+convert_to_grid_pos(R, C, Row, Col) :-
         S is R + C,
         S < 9, !,
-        Line is S - 1,
+        Row is S - 1,
         Col is C.
 
-convert_to_grid_pos(R, C, Line, Col) :-
+convert_to_grid_pos(R, C, Row, Col) :-
         S is R + C,
-        Line is S - 1,
+        Row is S - 1,
         Col is 9 - R.
 
 % Rows

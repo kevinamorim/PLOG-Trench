@@ -19,3 +19,6 @@ first_player(p1).
 
 next_player(p1, p2).
 next_player(p2, p1).
+
+in_enemy_turf(p1, Row) :- Row > 8.
+in_enemy_turf(p2, Row) :- Row < 8.

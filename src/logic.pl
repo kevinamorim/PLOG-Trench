@@ -64,7 +64,7 @@ can_move(L, [R1, C1], [R2, C2], Player) :-
         get_allowed_dir_for(PI, DIR),
         %write('Ei men passou tudo'), nl,
         !,
-        check_road(L, [R1, C1], [R2, C2], Player, 0).
+        check_road(L, [R1,C1], [R1,C1], [R2,C2], Player, 0).
 
 
 % ===========================================
@@ -135,18 +135,18 @@ get_perpendicular_direction([R1, C1], [R2, C2], D) :-
 % VERIFICATION OF TRAJECTS
 % ===========================================
 %       Coordinates in alpha
-check_road(L, [R1, C1], [R2, C2], Player, Count) :-
+check_road(L, [P1,P2], [R1,C1], [R2, C2], Player, Count) :-
         
         % Finish it
         R1 == R2, C1 == C2,
-                % if a piece exists there, and its enemy
-                        get_piece(L, [R1, C1], Piece),
-                        \+ check_piece_player(Piece, Player);
+                can_capture(L, [P1,P2], [R2,C2], Player);
         
         % Finish it, but softly
+        /*
         R1 == R2, C1 == C2, 
                 % if no piece is there
                         is_valid_house(L, [R1,C1], Count);
+        */
         
         % southeast                                                         
         R1 == R2, C1 \= C2,
@@ -157,7 +157,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         %write('> southeast'), nl,
                         get_next_letter(C1, TC, s),
                         Count1 is Count + 1,
-                        check_road(L, [R1, TC], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [R1, TC], [R2, C2], Player, Count1);
         
         % northwest
         R1 == R2, C1 \= C2,
@@ -168,7 +168,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         %write('> northwest'), nl,
                         get_next_letter(C1, TC, n),
                         Count1 is Count + 1,
-                        check_road(L, [R1, TC], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [R1, TC], [R2, C2], Player, Count1);
         
         % southwest
         C1 == C2,  R1 \= R2,
@@ -179,7 +179,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         %write('> southwest'), nl,
                         get_next_letter(R1, TR, s),
                         Count1 is Count + 1,
-                        check_road(L, [TR, C1], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [TR, C1], [R2, C2], Player, Count1);
         
         % northeast
         C1 == C2, R1 \= R2,
@@ -190,7 +190,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         %write('> northeast'), nl,
                         get_next_letter(R1, TR, n),
                         Count1 is Count + 1,
-                        check_road(L, [TR, C1], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [TR, C1], [R2, C2], Player, Count1);
         
         % south
         R1 \= R2, C1 \= C2,
@@ -204,7 +204,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         get_next_letter(R1, TR, s),
                         get_next_letter(C1, TC, s),
                         Count1 is Count + 1,
-                        check_road(L, [TR, TC], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
         
         % should be north lol
         R1 \= R2, C1 \= C2,
@@ -218,7 +218,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         get_next_letter(R1, TR, n),
                         get_next_letter(C1, TC, n),
                         Count1 is Count + 1,
-                        check_road(L, [TR, TC], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
         
         % east
         R1 \= R2, C1 \= C2,
@@ -232,7 +232,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         get_next_letter(R1, TR, n),
                         get_next_letter(C1, TC, s),
                         Count1 is Count + 1,
-                        check_road(L, [TR, TC], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
         
         % west
         R1 \= R2, C1 \= C2,
@@ -246,20 +246,36 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                         get_next_letter(R1, TR, s),
                         get_next_letter(C1, TC, n),
                         Count1 is Count + 1,
-                        check_road(L, [TR, TC], [R2, C2], Player, Count1);
+                        check_road(L, [P1,P2], [TR, TC], [R2, C2], Player, Count1);
         
         !, fail.
       
 % ===========================================
 %   Checking stuff
 % ===========================================
-is_valid_house([_|_], [_,_], 0):- !.
+is_valid_house([_|_], [_,_], 0) :- !.
         
 is_valid_house(L, [R,C], Count) :-
         Count > 0,
-               is_empty_piece(L, [R, C]).
-        
+               is_empty_piece(L, [R,C]).
 
+can_capture(L, [P1,P2], [T1,T2], Player) :-
+        
+        is_empty_piece(L, [T1,T2]);
+        
+        is_trench([T1,T2]),
+                get_piece(L, [T1, T2], Piece),
+                \+ check_piece_player(Piece, Player),
+                convert_alpha_num(P1,X),
+                convert_alpha_num(P2,Y),
+                convert_to_grid_pos(X, Y, Row, _),
+                %write('Row: '), write(Row), nl,
+                in_enemy_turf(Player, Row);
+        
+        get_piece(L, [P1, P2], Piece),
+        \+ check_piece_player(Piece, Player).
+
+%
 is_empty_piece(L, [R,C]) :-
         get_piece(L, [R,C], PI),
         PI == e.
@@ -267,8 +283,10 @@ is_empty_piece(L, [R,C]) :-
 % ===========================================
 % Le Trench
 % ===========================================
-is_trench([X, Y]) :- 
-        convert_to_grid_pos(X, Y, Line, _),
-        Line == 8.
+is_trench([R, C]) :-
+        convert_alpha_num(R,X),
+        convert_alpha_num(C,Y),
+        convert_to_grid_pos(X, Y, Row, _),
+        Row == 8.
 % ===========================================
 % ===========================================
