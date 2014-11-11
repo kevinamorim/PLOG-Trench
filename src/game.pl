@@ -35,7 +35,7 @@ read_player_move(L, Player, NL) :-
         write('Piece selected: '), get_board_symbol(P, S), write(S), nl,
         write('Select Target (xy): '),
         readPosition([B1,B2]),
-        move_piece(L, [A1,A2], [B1,B2], NL);
+        move_piece(L, [A1,A2], [B1,B2], NL, Player);
         %else : happens when the player inserts coordinates of a piece that it's not his
         read_player_move(L, Player, NL).
                     
@@ -113,7 +113,7 @@ player_has_moves(GameList, Player, [X, Y]) :-
         X < 9, Y < 9,
                 get_piece(GameList, [X, Y], P),
                 check_piece_player(P, Player),
-                piece_has_moves(GameList, [X, Y], [1, 1]).
+                piece_has_moves(GameList, [X, Y], [1, 1], Player).
 
 player_has_moves(GameList, Player, [X, Y]) :-
         X < 9, !,
@@ -126,21 +126,21 @@ player_has_moves(GameList, Player, [X, Y]) :-
         fail.
 
 % checks if a piece has a valid movement to it
-piece_has_moves(GameList, [X,Y], [A1, A2]) :-
+piece_has_moves(GameList, [X,Y], [A1, A2], Player) :-
         A1 < 9, A2 < 9,
                 convert_alpha_num(X1, X),
                 convert_alpha_num(Y1, Y),
                 convert_alpha_num(B1, A1),
                 convert_alpha_num(B2, A2),
-                can_move(GameList, [X1, Y1], [B1, B2]).
+                can_move(GameList, [X1, Y1], [B1, B2], Player).
 
-piece_has_moves(GameList, [X,Y], [A1,A2]) :-
+piece_has_moves(GameList, [X,Y], [A1,A2], Player) :-
         A1 < 9, !,
                 B1 is A1 + 1,
-                piece_has_moves(GameList, [X,Y], [B1,A2]);
+                piece_has_moves(GameList, [X,Y], [B1,A2], Player);
         A2 < 9, !,
                 B2 is A2 + 1,
-                piece_has_moves(GameList, [X,Y], [1,B2]);
+                piece_has_moves(GameList, [X,Y], [1,B2], Player);
         fail.
 
 

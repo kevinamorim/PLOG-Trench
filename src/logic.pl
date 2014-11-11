@@ -16,14 +16,14 @@
 
 % movePiece(GameList, [From], [To], NewGameList).
 
-move_piece(L, [X1, Y1], [X2, Y2], NL) :-
+move_piece(L, [X1, Y1], [X2, Y2], NL, Player) :-
         convert_alpha_num(X1, R1),
         convert_alpha_num(Y1, C1),
         convert_alpha_num(X2, R2),
         convert_alpha_num(Y2, C2),
         %write('from: '), write([R1, C1]), write(' to: '), write([R2, C2]), nl,
         get_piece(L, [R1, C1], P),
-        can_move(L, [X1, Y1], [X2, Y2]), % Verifies if the move can be done
+        can_move(L, [X1, Y1], [X2, Y2], Player), % Verifies if the move can be done
         set_piece(L, e, [R1, C1], L1),
         set_piece(L1, P, [R2, C2], NL).
 
@@ -52,7 +52,7 @@ set_piece(L, P, [R, C], NL) :-
 % Predicate that checks if a given piece can move from a pos to another.
 
 % canMove(GameList, [From], [To])
-can_move(L, [R1, C1], [R2, C2]) :- 
+can_move(L, [R1, C1], [R2, C2], Player) :- 
         %write('can move: '), write(R1), write(C1), write(R2), write(C2), nl,
         R1 \= R2, 
         convert_alpha_num(R1, A1),
@@ -67,7 +67,7 @@ can_move(L, [R1, C1], [R2, C2]) :-
         get_direction([R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR),
-        check_road(L, [R1, C1], [R2, C2]);
+        check_road(L, [R1, C1], [R2, C2], Player);
         
         C1 \= C2,
         convert_alpha_num(R1, A1),
@@ -82,7 +82,7 @@ can_move(L, [R1, C1], [R2, C2]) :-
         get_direction([R1, C1], [R2, C2], DIR),
         %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR),
-        check_road(L, [R1, C1], [R2, C2]).
+        check_road(L, [R1, C1], [R2, C2], Player).
 
 % ===========================================
 % DISTANCE
@@ -155,7 +155,24 @@ get_perpendicular_direction([R1, C1], [R2, C2], D) :-
 % ===========================================
 % -----> Positions in alpha
 
-check_road(L, [R1, C1], [R2, C2]) :-
+check_road(L, [R1, C1], [R2, C2], Player) :-
+           
+        % Finish it
+        R1 == R2, C1 == C2,
+                % if a piece exists there, and its enemy
+                        convert_alpha_num(R1, X1),
+                        convert_alpha_num(C1, Y1),
+                        get_piece(L, [X1, Y1], Piece),
+                        \+ check_piece_player(Piece, Player);
+        
+        R1 == R2, C1 == C2, 
+                % if no piece is there
+                        convert_alpha_num(R1, X1),
+                        convert_alpha_num(C1, Y1),
+                        get_piece(L, [X1, Y1], Piece),
+                        Piece == e;
+        
+        % northwest                                                             
         R1 == R2,
         C1 \= C2,
         convert_alpha_num(R1, X1),
@@ -165,8 +182,11 @@ check_road(L, [R1, C1], [R2, C2]) :-
         convert_to_grid_pos(X1, Y1, ROW1, _),
         convert_to_grid_pos(X2, Y2, ROW2, _),
         ROW1 > ROW2,
-        check_road_diagonal(L, [R1, C1], [R2, C2], nw);
+        get_next_letter(C1, TC, n),
+        is_empty_piece(L, [R1, TC]),
+                check_road(L, [R1, TC], [R2, C2], Player);
         
+        % southeast
         R1 == R2,
         C1 \= C2,
         convert_alpha_num(R1, X1),
@@ -176,8 +196,11 @@ check_road(L, [R1, C1], [R2, C2]) :-
         convert_to_grid_pos(X1, Y1, ROW1, _),
         convert_to_grid_pos(X2, Y2, ROW2, _),
         ROW1 < ROW2,
-        check_road_diagonal(L, [R1, C1], [R2, C2], se);
+        get_next_letter(C1, TC, s),
+        is_empty_piece(L, [R1, TC]),
+                check_road(L, [R1, TC], [R2, C2], Player);
         
+        % northeast
         C1 == C2,
         R1 \= R2,
         convert_alpha_num(R1, X1),
@@ -187,8 +210,11 @@ check_road(L, [R1, C1], [R2, C2]) :-
         convert_to_grid_pos(X1, Y1, ROW1, _),
         convert_to_grid_pos(X2, Y2, ROW2, _),
         ROW1 > ROW2,
-        check_road_diagonal(L, [R1, C1], [R2, C2], ne);
+        get_next_letter(R1, TR, n),
+        is_empty_piece(L, [TR, C1]),
+                check_road(L, [TR, C1], [R2, C2], Player);
         
+        % southwest
         C1 == C2,
         R1 \= R2,
         convert_alpha_num(R1, X1),
@@ -198,33 +224,50 @@ check_road(L, [R1, C1], [R2, C2]) :-
         convert_to_grid_pos(X1, Y1, ROW1, _),
         convert_to_grid_pos(X2, Y2, ROW2, _),
         ROW1 < ROW2,
-        check_road_diagonal(L, [R1, C1], [R2, C2], sw);
+        get_next_letter(R1, TR, s),
+        is_empty_piece(L, [TR, C1]),
+                check_road(L, [TR, C1], [R2, C2], Player);
         
+        % south
         R1 \= R2,
         C1 \= C2,
         char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
-        X1 < X2, Y1 < Y2, 
-        check_road_vertical(L, [R1, C1], [R2, C2], s);
+        X1 < X2, Y1 < Y2,
+        get_next_letter(R1, TR, s),
+        get_next_letter(C1, TC, s), 
+        is_empty_piece(L, [TR, TC]),
+                check_road(L, [TR, TC], [R2, C2], Player);
         
+        % should be notrh lol
         R1 \= R2,
         C1 \= C2,
         char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
         X1 > X2, Y1 > Y2, 
-        check_road_vertical(L, [R1, C1], [R2, C2], s);
+        get_next_letter(R1, TR, n),
+        get_next_letter(C1, TC, n),
+        is_empty_piece(L, [TR, TC]),
+                check_road(L, [TR, TC], [R2, C2], Player);
         
+        % east
         R1 \= R2,
         C1 \= C2,
         char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
         X1 > X2, Y1 < Y2,
-        check_road_horizontal(L, [R1, C1], [R2, C2], e);
+        get_next_letter(R1, TR, n),
+        get_next_letter(C1, TC, s),
+        is_empty_piece(L, [TR, TC]),
+                check_road(L, [TR, TC], [R2, C2], Player);
         
+        % west
         R1 \= R2,
         C1 \= C2,
         char_code(R1, X1), char_code(R2, X2), char_code(C1, Y1), char_code(C2, Y2),
         X1 < X2, Y1 > Y2,
-        check_road_horizontal(L, [R1, C1], [R2, C2], w);
-        
-        R1 == R2, C1 == C2.
+        get_next_letter(R1, TR, s),
+        get_next_letter(C1, TC, n),
+        is_empty_piece(L, [TR, TC]),
+                check_road(L, [TR, TC], [R2, C2], Player).
+      
 
 % check_road_vertical([posSrc], [posDest], dir(n/s))
 % example: check_road_vertical([a, i], [p, h], s)
@@ -232,93 +275,18 @@ check_road(L, [R1, C1], [R2, C2]) :-
 % Works for north and south movements... 
 % -> Tested
 % Base
-check_road_vertical(_, [R1, C1], [R2, C2], _) :-
-        R1 == R2, C1 == C2. 
-
-check_road_vertical(L, [R1, C1], [R2, C2], DIR) :-
-        R1 \= R2, C1 \= C2, % The src and dest cant be equal
-        get_next_letter(R1, TR, DIR),
-        get_next_letter(C1, TC, DIR),
-        convert_alpha_num(TR, X),
-        convert_alpha_num(TC, Y),
-        get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_vertical(L, [TR, TC], [R2, C2], DIR).   
-
-% check_road_horizontal([posSrc], [posDest], dir(e/w))
-% -> Tested: more testing is needed.
-% Base
-check_road_horizontal(_, [R1, C1], [R2, C2], _) :- 
-        R1 == R2, C1 == C2.
-
-check_road_horizontal(L, [R1, C1], [R2, C2], DIR) :-
-        % moving to the right
-        R1 \= R2, C1 \= C2, 
-        DIR == e, 
-        get_next_letter(R1, TR, n),
-        get_next_letter(C1, TC, s),
-        convert_alpha_num(TR, X),
-        convert_alpha_num(TC, Y),
-        get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_horizontal(L, [TR, TC], [R2, C2], DIR);
-        
-        % moving to the left
-        R1 \= R2, C1 \= C2, 
-        DIR == w,
-        get_next_letter(R1, TR, s),
-        get_next_letter(C1, TC, n),
-        convert_alpha_num(TR, X),
-        convert_alpha_num(TC, Y),
-        get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_horizontal(L, [TR, TC], [R2, C2], DIR).
-
-% check_road_diagonal([posSrc], [posDest], dir(nw, ne, sw, se))
-% -> Tested: but needs more
-check_road_diagonal(_, [R1, C1], [R2, C2], _) :- 
-        R1 == R2, C1 == C2.
-
-check_road_diagonal(L, [R1, C1], [R2, C2], DIR) :-
-        % northeast
-        DIR == ne,
-        R1 \= R2,
-        get_next_letter(R1, TR, n),
-        convert_alpha_num(TR, X),
+is_empty_piece(L, [R1, C1]) :-
+        convert_alpha_num(R1, X),
         convert_alpha_num(C1, Y),
         get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_diagonal(L, [TR, C1], [R2, C2], DIR);
-
-        % northwest
-        DIR == nw,
-        C1 \= C2,
-        get_next_letter(C1, TC, n),
-        convert_alpha_num(R1, X),
-        convert_alpha_num(TC, Y),
-        get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_diagonal(L, [R1, TC], [R2, C2], DIR);
-
-        % southeast
-        DIR == se,
-        C1 \= C2,
-        get_next_letter(C1, TC, s),
-        convert_alpha_num(R1, X),
-        convert_alpha_num(TC, Y),
-        get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_diagonal(L, [R1, TC], [R2, C2], DIR);
-        
-        % southwest
-        DIR == sw,
-        R1 \= R2,
-        get_next_letter(R1, TR, s),
-        convert_alpha_num(TR, X),
-        convert_alpha_num(C1, Y),
-        get_piece(L, [X, Y], PI),
-        PI == e,
-        check_road_diagonal(L, [TR, C1], [R2, C2], DIR).
-
+        PI == e.
+% ===========================================
+% ===========================================
+% ===========================================
+% Le Trench
+% ===========================================
+is_trench([X, Y]) :- 
+        convert_to_grid_pos(X, Y, Line, _),
+        Line == 8.
 % ===========================================
 % ===========================================
