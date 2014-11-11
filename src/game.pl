@@ -135,7 +135,7 @@ piece_has_moves(GameList, [X,Y], [A1, A2], Player) :-
                 convert_alpha_num(Y1, Y),
                 convert_alpha_num(B1, A1),
                 convert_alpha_num(B2, A2),
-                write('> CALL: '), write([X1,Y1,B1,B2]), nl,
+                %write('> CALL: '), write([X1,Y1,B1,B2]), nl,
                 can_move(GameList, [X1, Y1], [B1, B2], Player).
 
 piece_has_moves(GameList, [X,Y], [A1,A2], Player) :-

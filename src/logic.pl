@@ -47,20 +47,22 @@ set_piece(L, P, [R, C], NL) :-
 % canMove(GameList, [FromX,FromY], [ToX,ToY], Player)
 %       Coordinates in alpha
 can_move(L, [R1, C1], [R2, C2], Player) :-
-        R1 == R2, C1 == C2, write('>>> fail: '), write([R1,C1,R2,C2]), nl, !, fail;
+        R1 == R2, C1 == C2,
+        %write('>>> fail: '), write([R1,C1,R2,C2]), nl,
+        !, fail;
         
         % else
         get_piece(L, [R1, C1], PI),
-        write('Piece: '), write(PI), nl,
+        %write('Piece: '), write(PI), nl,
         get_distance([R1, C1], [R2, C2], DIST),
-        write('Distance: '), write(DIST), nl,
+        %write('Distance: '), write(DIST), nl,
         max_distance_for(PI, MAX),
-        write('Max: '), write(MAX), nl,
+        %write('Max: '), write(MAX), nl,
         DIST < (MAX + 1),       % Distance verification
         get_direction([R1, C1], [R2, C2], DIR),
-        write('Direction: '), write(DIR), nl,
+        %write('Direction: '), write(DIR), nl,
         get_allowed_dir_for(PI, DIR),
-        write('Ei men passou tudo'), nl,
+        %write('Ei men passou tudo'), nl,
         !,
         check_road(L, [R1, C1], [R2, C2], Player, 0).
 
@@ -152,7 +154,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                 convert_alpha_num(C2, Y2),
                 Y2 > Y1,
                         is_valid_house(L, [R1,C1], Count),
-                        write('> southeast'), nl,
+                        %write('> southeast'), nl,
                         get_next_letter(C1, TC, s),
                         Count1 is Count + 1,
                         check_road(L, [R1, TC], [R2, C2], Player, Count1);
@@ -163,7 +165,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                 convert_alpha_num(C2, Y2),
                 Y2 < Y1,
                         is_valid_house(L, [R1,C1], Count),
-                        write('> northwest'), nl,
+                        %write('> northwest'), nl,
                         get_next_letter(C1, TC, n),
                         Count1 is Count + 1,
                         check_road(L, [R1, TC], [R2, C2], Player, Count1);
@@ -174,7 +176,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                 convert_alpha_num(R2, X2),
                 X2 > X1,
                         is_valid_house(L, [R1,C1], Count),
-                        write('> southwest'), nl,
+                        %write('> southwest'), nl,
                         get_next_letter(R1, TR, s),
                         Count1 is Count + 1,
                         check_road(L, [TR, C1], [R2, C2], Player, Count1);
@@ -185,7 +187,7 @@ check_road(L, [R1, C1], [R2, C2], Player, Count) :-
                 convert_alpha_num(R2, X2),
                 X2 < X1,
                         is_valid_house(L, [R1,C1], Count),
-                        write('> northeast'), nl,
+                        %write('> northeast'), nl,
                         get_next_letter(R1, TR, n),
                         Count1 is Count + 1,
                         check_road(L, [TR, C1], [R2, C2], Player, Count1);
