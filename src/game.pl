@@ -59,7 +59,7 @@ game_list([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1],
 */
 
 game_list([[g1], [co1, co1], [ca1, ca1, ca1], [sa1, sa1, sa1, sa1], 
-         [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, e, e, e, e], [e, e, e, so2, e, e, e, e],
+         [e, so1, so1, so1, e], [e, e, so1, so1, e, e], [e, e, e, e, e, e, e], [e, e, e, g1, e, e, e, e],
          [e, e, e, so1, e, e, e], [e, e, so2, so2, e, e], [e, so2, so2, so2, e], [sa2, sa2, sa2, sa2],
          [ca2, ca2, ca2], [co2, co2], [g2]]).
 

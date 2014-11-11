@@ -263,6 +263,8 @@ can_capture(L, [P1,P2], [T1,T2], Player) :-
         
         is_empty_piece(L, [T1,T2]);
         
+        is_trench([P1,P2]), is_trench([T1,T2]), !, fail;
+        
         is_trench([T1,T2]),
                 get_piece(L, [T1, T2], Piece),
                 \+ check_piece_player(Piece, Player),
