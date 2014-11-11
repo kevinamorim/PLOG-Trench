@@ -13,9 +13,9 @@ convert_to_grid_pos(R, C, Row, Col) :-
         Row is S - 1,
         Col is 9 - R.
 
-convert_alpha_point([R1, C1], [R2, C2]) :-
-        convert_alpha_num(R1, R2),
-        convert_alpha_num(C1, C2).
+convert_alpha_point([AlphaRow, AlphaCol], [NumRow, NumCol]) :-
+        convert_alpha_num(AlphaRow, NumRow),
+        convert_alpha_num(AlphaCol, NumCol).
 
 % Rows
 convert_alpha_num(a, 1):- !.
