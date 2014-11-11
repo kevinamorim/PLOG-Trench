@@ -16,8 +16,19 @@ play_game :-
 play_game(L, _) :-
         game_over(L), !.
         
-play_game(L, P) :-     
+play_game(L, P) :-
+        \+ cpu(P),
         read_player_move(L, P, NL),
+        print_board(NL),
+        next_player(P, NP), !,
+        play_game(NL, NP).
+
+play_game(L, P) :-
+        cpu(P),
+        cpu_moves(L, P, Moves),
+        choose_cpu_move(L, Moves, [P1,P2], [T1,T2]),
+        move_piece(L, [P1,P2], [T1,T2], NL),
+        nl, write('Player 2 has decided to move from '), write([P1,P2]), write(' to '), write([T1,T2]), nl, nl,
         print_board(NL),
         next_player(P, NP), !,
         play_game(NL, NP).
@@ -72,17 +83,17 @@ game_over(GameList) :-
         \+ player_has_pieces(GameList, p1),
                 write('Player 1 has no pieces left.'), nl,
                 write('Player 2 wins'), !, nl;
-        write('player 1 has pieces'), nl,
+        %write('player 1 has pieces'), nl,
         \+ player_has_pieces(GameList, p2),
                 write('Player 2 has no pieces left.'), nl,
                 write('Player 1 wins'), !, nl;
-        write('player 2 has pieces'), nl,
+        %write('player 2 has pieces'), nl,
         
         
         \+ player_has_moves(GameList, p1, [1, 1]),
                 write('Player 1 has no moves left.'), nl,
                 write('Player 2 wins'), !, nl;
-        write('Player 1 has moves'), nl, %!,
+        %write('Player 1 has moves'), nl, %!,
         \+ player_has_moves(GameList, p2, [1, 1]),
                 write('Player 2 has no moves left.'), nl,
                 write('Player 1 wins'), !, nl.

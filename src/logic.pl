@@ -37,7 +37,7 @@ capture_all(L, [P1, P2], [R,C], [T1, T2], D, NL) :-
 get_piece(L, [R, C], P) :-
         convert_alpha_point([R, C], [R1, C1]),  
         convert_to_grid_pos(R1, C1, Row, Col),
-        select_elem(Row, Col, L, P).
+        select_elem(L, Row, Col, P).
 
 % setPiece(GameList, Piece, [Pos], NewGameList)
 %       Coordinates in alpha
@@ -263,4 +263,81 @@ inc([R,C], [NextR, NextC], D) :-
                 
 
 % ===========================================
+%       CPU LOGIC
 % ===========================================
+
+:- use_module(library(random)).
+
+/*
+test :- game_list(X), cpu_moves(X, p2, [1,1], Moves),
+        write('Moves: '), write(Moves), nl, nl,
+        choose_cpu_move(X, Moves, [P1,P2], [T1,T2]),
+        write('   Pos: '), write([P1,P2]), nl,
+        write('Target: '), write([T1,T2]), nl.
+
+test2 :- game_list(X), write(X).
+*/
+
+cpu_moves(GameList, Player, Moves) :-
+        cpu_moves(GameList, Player, [1, 1], Moves).
+
+cpu_moves(GameList, Player, [X, Y], Moves) :-
+        Y == 9, Moves = [];
+
+        X < 9,
+                convert_alpha_num(R,X),
+                convert_alpha_num(C,Y),
+                get_piece(GameList, [R, C], P),
+                check_piece_player(P, Player), !,
+                cpu_piece_has_moves(GameList, [X, Y], [1, 1], Player, PieceMoves), !,
+                X1 is X + 1,
+                cpu_moves(GameList, Player, [X1, Y], NewMoves),
+                append([[R,C]],PieceMoves, NewPieceMoves),
+                %write(NewPieceMoves), nl,
+                append([NewPieceMoves], NewMoves, Moves);
+        
+        X < 9, !,
+                X1 is X + 1,
+                cpu_moves(GameList, Player, [X1, Y], Moves);
+        
+        Y < 9, !,
+                Y1 is Y + 1,
+                cpu_moves(GameList, Player, [1, Y1], Moves).
+
+%
+cpu_piece_has_moves(GameList, [R,C], [TR,TC], Player, PieceMoves) :-
+        
+        TC == 9, PieceMoves = [];
+        
+        TR < 9,
+                NR is TR + 1,
+                %write('>> call : '), write([R,C]), write([TR,TC]), nl,
+                %write('New: '), write(NewPieceMoves), nl,
+                %write('>>> try move: '), write([A1, A2]), write([B1, B2]), nl,
+                convert_alpha_point([A1,A2], [R,C]),
+                convert_alpha_point([B1,B2], [TR,TC]),
+                can_move(GameList, [A1, A2], [B1, B2], Player), !,
+                %write('>>> can move'), nl,
+                cpu_piece_has_moves(GameList, [R,C], [NR,TC], Player, NewPieceMoves), !,
+                append([[B1,B2]], NewPieceMoves, PieceMoves);
+                %write(PieceMoves), nl;
+        
+        % can_move failed
+        TR < 9, !,
+                NR is TR + 1,
+                cpu_piece_has_moves(GameList, [R,C], [NR,TC], Player, NewPieceMoves),
+                append([], NewPieceMoves, PieceMoves);
+                %write(PieceMoves), nl;
+        
+        TC < 9, !,
+                NC is TC + 1,
+                cpu_piece_has_moves(GameList, [R,C], [1,NC], Player, PieceMoves).
+
+choose_cpu_move(_, Moves, [P1,P2], [T1,T2]) :-
+        length(Moves, ML),
+        random(1, ML, RandomRow),
+        select_row(Moves, RandomRow, Row),
+        select_col(Row, 1, [P1,P2]),
+        length(Row, RL),
+        random(2, RL, RandomCol),
+        select_col(Row, RandomCol, [T1,T2]).

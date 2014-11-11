@@ -12,13 +12,19 @@
 
 % Select an element in a matrix
 % selectElem(Row, Column, List, Element)
-select_elem(Row, Col, L, E) :-
+select_elem(L, Row, Col, E) :-
         nth1(Row, L, X),
         nth1(Col, X, E).
 
-select_elem(Row, Col, L, E) :-
+select_elem(L, Row, Col, E) :-
         nth1(Row, L, X),
         nth1(Col, X, E).
+
+select_row(L, Row, E) :-
+        nth1(Row, L, E).
+
+select_col(Row, Col, E) :-
+        nth1(Col, Row, E).
 
 % replaces the list element in the index I by X
 replace([_|T], 1, X, [X|T]).
